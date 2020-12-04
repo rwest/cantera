@@ -17,7 +17,7 @@ import numpy as np
 import cantera as ct
 
 
-# In[16]:
+# In[29]:
 
 
 input_file = """
@@ -104,57 +104,65 @@ species:
     diameter: 2.75
 
 reactions:
-- equation: O + H2 <=> H + OH  # Reaction 3
+- equation: O + H2 <=> H + OH  # Reaction 1
+  duplicate: true
   rate-constant: {A: 3.87e+04, b: 2.7, Ea: 6260.0}
-
+- equation: O + H2 <=> H + OH  # Reaction 2
+  duplicate: true
+  type: blowers-masel
+  rate-constant: {A: 3.87e+04, b: 2.7, Ea0: 6260.0, w0: 1e9}
+  note: Example would be clearer if we tweak the Ea0 so the actual Ea matches Reaction 1
 """
 
 
-# In[17]:
+# In[30]:
 
 
 with open('input_file.yaml', 'w') as f:
     f.write(input_file)
 
 
-# In[18]:
+# In[31]:
 
 
 gas = ct.Solution('input_file.yaml')
 
 
-# In[19]:
+# In[32]:
 
 
 gas.species()
 
 
-# In[20]:
+# In[37]:
 
 
 gas.reactions()
 
 
-# In[21]:
+# In[38]:
 
 
 gas.species('OH')
 
 
-# In[22]:
+# In[39]:
 
 
 f"{gas.species('OH').thermo.h(298)/1e6 :.2f} kJ/mol"
 
 
-# In[23]:
+# In[46]:
 
 
 for i, r in enumerate(gas.reactions()):
+    print(f"Reaction {i}")
     print(gas.reaction(i))
     print(f"∆Hrxn = {gas.delta_enthalpy[i]/1e6:.2f} kJ/mol")
-    print(f"{gas.forward_rate_constants[i]:.2g} m3/kmol/s")
-    print(f"{gas.forward_rate_constants[i]*1e6/1e3:.2g} cm3/mol/s")
+    print(r.rate)
+    print(f"At T = {gas.T} K")
+    print(f"k = {gas.forward_rate_constants[i]:.2g} m3/kmol/s")
+    print(f"k = {gas.forward_rate_constants[i]*1e6/1e3:.2g} cm3/mol/s")
     print("")
 
 
@@ -189,28 +197,39 @@ def change_species_enthalpy(species_name, dH):
 change_species_enthalpy('OH', +10e6)
 
 
-# In[26]:
+# In[49]:
 
 
 f"{gas.species('OH').thermo.h(298)/1e6 :.2f} kJ/mol"
 
 
-# In[27]:
+# In[55]:
+
+
+# Change the T just to force Cantera to re-evaluate enthaplies etc.
+gas.TP = 310, gas.P
+gas.forward_rate_constants
+# Then change it back
+gas.TP = 300, gas.P
+gas.T
+
+
+# In[47]:
 
 
 for i, r in enumerate(gas.reactions()):
+    print(f"Reaction {i}")
     print(gas.reaction(i))
     print(f"∆Hrxn = {gas.delta_enthalpy[i]/1e6:.2f} kJ/mol")
-    print(f"{gas.forward_rate_constants[i]:.2g} m3/kmol/s")
-    print(f"{gas.forward_rate_constants[i]*1e6/1e3:.2g} cm3/mol/s")
+    print(r.rate)
+    print(f"At T = {gas.T} K")
+    print(f"k = {gas.forward_rate_constants[i]:.2g} m3/kmol/s")
+    print(f"k = {gas.forward_rate_constants[i]*1e6/1e3:.2g} cm3/mol/s")
     print("")
 
 
-# In[28]:
-
-
-gas.T
-
+# Notice that Reaction 1, the rate has not changed even though we changed ∆Hrxn.
+# But in Reaction 2, increasing ∆Hrxn has increased the barrier height, and the rate has slowed (compared to the cell above)
 
 # In[ ]:
 
