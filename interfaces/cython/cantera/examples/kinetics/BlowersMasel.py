@@ -6,7 +6,7 @@
 # conda install -c cantera/label/dev cantera
 # ```
 
-# In[1]:
+# In[15]:
 
 
 import numpy as np
@@ -17,7 +17,7 @@ import numpy as np
 import cantera as ct
 
 
-# In[25]:
+# In[16]:
 
 
 input_file = """
@@ -110,62 +110,55 @@ reactions:
 """
 
 
-# In[26]:
+# In[17]:
 
 
 with open('input_file.yaml', 'w') as f:
     f.write(input_file)
 
 
-# In[27]:
+# In[18]:
 
 
 gas = ct.Solution('input_file.yaml')
 
 
-# In[28]:
+# In[19]:
 
 
 gas.species()
 
 
-# In[29]:
+# In[20]:
 
 
 gas.reactions()
 
 
-# In[30]:
+# In[21]:
 
 
 gas.species('OH')
 
 
-# In[31]:
+# In[22]:
 
 
-thermo = gas.species('OH').thermo
+f"{gas.species('OH').thermo.h(298)/1e6 :.2f} kJ/mol"
 
 
-# In[32]:
+# In[23]:
 
 
-f"{thermo.h(298)/1e6 :.2f} kJ/mol"
+for i, r in enumerate(gas.reactions()):
+    print(gas.reaction(i))
+    print(f"∆Hrxn = {gas.delta_enthalpy[i]/1e6:.2f} kJ/mol")
+    print(f"{gas.forward_rate_constants[i]:.2g} m3/kmol/s")
+    print(f"{gas.forward_rate_constants[i]*1e6/1e3:.2g} cm3/mol/s")
+    print("")
 
 
-# In[34]:
-
-
-f"∆Hrxn = {gas.delta_enthalpy[0]/1e6:.2f} kJ/mol"
-
-
-# In[35]:
-
-
-thermo.coeffs
-
-
-# In[36]:
+# In[24]:
 
 
 def change_species_enthalpy(species_name, dH):
@@ -190,54 +183,33 @@ def change_species_enthalpy(species_name, dH):
     print(f"Modified H(298) = {species.thermo.h(298)/1e6:.1f} kJ/mol")
 
 
-# In[37]:
+# In[25]:
 
 
-change_species_enthalpy('OH', 10e6)
+change_species_enthalpy('OH', +10e6)
 
 
-# In[38]:
-
-
-gas.species('OH').thermo.coeffs
-
-
-# In[39]:
+# In[26]:
 
 
 f"{gas.species('OH').thermo.h(298)/1e6 :.2f} kJ/mol"
 
 
-# In[41]:
+# In[27]:
 
 
-r = gas.reaction(0)
-r
+for i, r in enumerate(gas.reactions()):
+    print(gas.reaction(i))
+    print(f"∆Hrxn = {gas.delta_enthalpy[i]/1e6:.2f} kJ/mol")
+    print(f"{gas.forward_rate_constants[i]:.2g} m3/kmol/s")
+    print(f"{gas.forward_rate_constants[i]*1e6/1e3:.2g} cm3/mol/s")
+    print("")
 
 
-# In[42]:
-
-
-f"∆Hrxn = {gas.delta_enthalpy[0]/1e6:.2f} kJ/mol"
-
-
-# In[43]:
-
-
-r.rate
-
-
-# In[44]:
+# In[28]:
 
 
 gas.T
-
-
-# In[46]:
-
-
-print(f"{gas.forward_rate_constants[0]:.2g} m3/kmol/s")
-print(f"{gas.forward_rate_constants[0]*1e6/1e3:.2g} cm3/mol/s")
 
 
 # In[ ]:
