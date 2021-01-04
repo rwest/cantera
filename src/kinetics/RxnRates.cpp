@@ -28,6 +28,36 @@ Arrhenius::Arrhenius(doublereal A, doublereal b, doublereal E)
     }
 }
 
+BlowersMasel::BlowersMasel()
+    : m_logA(-1.0E300)
+    , m_b(0.0)
+    , m_E(0.0)
+    , m_A(0.0)
+    , m_w(0.0)
+{
+}
+
+BlowersMasel::BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w, doublereal deltaH)
+    : m_b(b)
+    , m_A(A)
+    , m_w(w)
+{
+    if (m_A  <= 0.0) {
+        m_logA = -1.0E300;
+    } else {
+        m_logA = std::log(m_A);
+    }
+    if (deltaH < -4 * E) {
+        m_E = 0;
+    } else if (deltaH > 4 * E) {
+        m_E = deltaH;
+    } else {
+        double vp = 2 * m_w * ((m_w + E) / (m_w - E));
+        double Ea = (m_w + deltaH / 2) * pow((vp - 2 * m_w + deltaH),2) / (pow(vp, 2) - pow((4 * m_w), 2) + pow(deltaH, 2));
+        m_E = Ea;
+    }
+}
+
 SurfaceArrhenius::SurfaceArrhenius()
     : m_b(0.0)
     , m_E(0.0)

@@ -98,6 +98,100 @@ protected:
     doublereal m_logA, m_b, m_E, m_A;
 };
 
+//! Blowers Masel reaction rate type depends on enthalpy 
+/**
+ * A reaction rate coefficient of the following form.
+ *
+ *   \f[
+ *        E = 0  if DeltaH < -4E_0
+ *        E = DeltaH   if DeltaH > 4E_0
+ *        E = (w_0 + DeltaH / 2)(V_P - 2w_0 + DeltaH)^2 / (V_P^^2 - 4w_0^2 + DeltaH^2)
+ *        where
+ *        V_P = 2w_0 (w_0 + E_0) / (w_0 - E_0)
+ *        and w_0 is  theaverage of the bond dissociation energy of the 
+ *        bond breaking and that beingformed, which can be approximated as
+ *        arbitrary high value like 1000kJ/mol as long as w_0 >= 2E_0  
+ *        k_f =  A T^b \exp (-E/RT)
+ *   \f]
+ */
+
+class BlowersMasel
+{
+public:
+    //! return the rate coefficient type.
+    /*!
+     * @deprecated To be removed after Cantera 2.5.
+     */
+    static int type() {
+        warn_deprecated("BlowersMasel::type()",
+            "To be removed after Cantera 2.5.");
+        return BLOWERS_MASEL_REACTION_RATECOEFF_TYPE;
+    }
+
+    //! Default constructor.
+    BlowersMasel();
+
+    /// Constructor.
+    /// @param A pre-exponential. The unit system is
+    ///     (kmol, m, s). The actual units depend on the reaction
+    ///     order and the dimensionality (surface or bulk).
+    /// @param b Temperature exponent. Non-dimensional.
+    /// @param E Activation energy in temperature units. Kelvin.
+    /// @param w bond energy of the bond being formed or broke
+    /// @param deltaH enthalpy change of this reaction
+
+    BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w, doublereal deltaH);
+
+    //! Update concentration-dependent parts of the rate coefficient.
+    /*!
+     *   For this class, there are no concentration-dependent parts, so this
+     *   method does nothing.
+     */
+    void update_C(const doublereal* c) {
+    }
+
+    /**
+     * Update the value of the natural logarithm of the rate constant.
+     */
+    doublereal updateLog(doublereal logT, doublereal recipT) const {       
+        return m_logA + m_b*logT - m_E*recipT;
+    }
+
+    /**
+     * Update the value the rate constant.
+     *
+     * This function returns the actual value of the rate constant. It can be
+     * safely called for negative values of the pre-exponential factor.
+     */
+    doublereal updateRC(doublereal logT, doublereal recipT) const {
+        return m_A * std::exp(m_b*logT - m_E*recipT);
+    }
+
+    //! Return the pre-exponential factor *A* (in m, kmol, s to powers depending
+    //! on the reaction order)
+    double preExponentialFactor() const {
+        return m_A;
+    }
+
+    //! Return the temperature exponent *b*
+    double temperatureExponent() const {
+        return m_b;
+    }
+
+    //! Return the activation energy divided by the gas constant (i.e. the
+    //! activation temperature) [K]
+    doublereal activationEnergy_R() const {
+        return m_E;
+    }
+
+    //! Return the bond energy *w*
+    doublereal bondEnergy() const {
+        return m_w;
+    }    
+
+protected:
+    doublereal m_logA, m_b, m_E, m_A, m_w;
+};
 
 /**
  * An Arrhenius rate with coverage-dependent terms.

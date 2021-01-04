@@ -284,6 +284,21 @@ ElectrochemicalReaction::ElectrochemicalReaction(const Composition& reactants_,
 {
 }
 
+BlowersMaselReaction::BlowersMaselReaction()
+    : Reaction(BLOWERSMASEL_RXN)
+    , allow_negative_pre_exponential_factor(false)
+{
+}
+
+BlowersMaselReaction::BlowersMaselReaction(const Composition& reactants_,
+                                           const Composition& products_,
+                                           const BlowersMasel& rate_)
+    : Reaction(BLOWERSMASEL_RXN, reactants_, products_)
+    , rate(rate_)
+    , allow_negative_pre_exponential_factor(false)
+{
+}
+
 Arrhenius readArrhenius(const XML_Node& arrhenius_node)
 {
     return Arrhenius(getFloat(arrhenius_node, "A", "toSI"),
@@ -439,6 +454,33 @@ void readEfficiencies(ThirdBody& tbody, const AnyMap& node)
     if (node.hasKey("efficiencies")) {
         tbody.efficiencies = node["efficiencies"].asMap<double>();
     }
+}
+
+BlowersMasel readBlowersMasel(const Reaction& R, const AnyValue& rate,
+                        const Kinetics& kin, const UnitSystem& units,
+                        int pressure_dependence=0)
+{
+    double A, b, Ta, w, deltaH;
+    // int rxn_idx = kin.nReactions();
+    Units rc_units = rateCoeffUnits(R, kin, pressure_dependence);
+    if (rate.is<AnyMap>()) {
+        auto& rate_map = rate.as<AnyMap>();
+        A = units.convert(rate_map["A"], rc_units);
+        b = rate_map["b"].asDouble();
+        Ta = units.convertActivationEnergy(rate_map["Ea"], "K");
+        w = units.convertActivationEnergy(rate_map["w"], "K");
+        // deltaH = kin.getDeltaEnthalpy()[rxn_idx];
+        deltaH = 0;
+    } else {
+        auto& rate_vec = rate.asVector<AnyValue>(4);
+        A = units.convert(rate_vec[0], rc_units);
+        b = rate_vec[1].asDouble();
+        Ta = units.convertActivationEnergy(rate_vec[2], "K");
+        w = units.convertActivationEnergy(rate_vec[3], "K");
+        // deltaH = kin.getDeltaEnthalpy()[rxn_idx];
+        deltaH = 0;
+    }
+    return BlowersMasel(A, b, Ta, w, deltaH);
 }
 
 void setupReaction(Reaction& R, const XML_Node& rxn_node)
@@ -1007,6 +1049,14 @@ bool isElectrochemicalReaction(Reaction& R, const Kinetics& kin)
     return false;
 }
 
+void setupBlowersMaselReaction(BlowersMaselReaction& R, const AnyMap& node,
+                             const Kinetics& kin)
+{
+    setupReaction(R, node, kin);
+    R.allow_negative_pre_exponential_factor = node.getBool("negative-A", false);
+    R.rate = readBlowersMasel(R, node["rate-constant"], kin, node.units()); // not defined yet
+}
+
 shared_ptr<Reaction> newReaction(const XML_Node& rxn_node)
 {
     std::string type = toLowerCopy(rxn_node["type"]);
@@ -1055,7 +1105,12 @@ shared_ptr<Reaction> newReaction(const XML_Node& rxn_node)
         auto R = make_shared<ElectrochemicalReaction>();
         setupElectrochemicalReaction(*R, rxn_node);
         return R;
-    } else {
+    } 
+    // else if (type == "blowersmasel") {
+        // auto R = make_shared<BlowersMaselReaction>();
+        // setupBlowersMaselReaction();
+        // return R;} 
+    else {
         throw CanteraError("newReaction",
             "Unknown reaction type '" + rxn_node["type"] + "'");
     }
@@ -1107,7 +1162,11 @@ unique_ptr<Reaction> newReaction(const AnyMap& node, const Kinetics& kin)
         unique_ptr<ChebyshevReaction> R(new ChebyshevReaction());
         setupChebyshevReaction(*R, node, kin);
         return unique_ptr<Reaction>(move(R));
-    } else {
+    } else if (type == "blowersmasel") {
+        unique_ptr<BlowersMaselReaction> R(new BlowersMaselReaction());
+        setupBlowersMaselReaction(*R, node, kin);
+        return unique_ptr<Reaction>(move(R));}  
+    else {
         throw InputFileError("newReaction", node["type"],
             "Unknown reaction type '{}'", type);
     }
