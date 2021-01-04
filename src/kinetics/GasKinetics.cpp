@@ -41,6 +41,9 @@ void GasKinetics::update_rates_T()
         }
         updateKc();
         m_ROP_ok = false;
+        if (m_blowersmasel_rates.nReactions()) {
+            m_blowersmasel_rates.update(T, logT, m_rfn.data());
+        }
     }
 
     if (T != m_temp || P != m_pres) {
@@ -247,6 +250,9 @@ bool GasKinetics::addReaction(shared_ptr<Reaction> r)
     case CHEBYSHEV_RXN:
         addChebyshevReaction(dynamic_cast<ChebyshevReaction&>(*r));
         break;
+    case BLOWERSMASEL_RXN:
+        addBlowersMaselReaction(dynamic_cast<BlowersMaselReaction&>(*r));
+        break;
     default:
         throw CanteraError("GasKinetics::addReaction",
             "Unknown reaction type specified: {}", r->reaction_type);
@@ -318,6 +324,13 @@ void GasKinetics::addChebyshevReaction(ChebyshevReaction& r)
     m_cheb_rates.install(nReactions()-1, r.rate);
 }
 
+void GasKinetics::addBlowersMaselReaction(BlowersMaselReaction& r)
+{
+    // m_blowersmaselindx.push_back(nReactions()-1);
+    m_blowersmasel_rates.install(nReactions()-1, r.rate);
+}
+
+
 void GasKinetics::modifyReaction(size_t i, shared_ptr<Reaction> rNew)
 {
     // operations common to all reaction types
@@ -339,6 +352,9 @@ void GasKinetics::modifyReaction(size_t i, shared_ptr<Reaction> rNew)
         break;
     case CHEBYSHEV_RXN:
         modifyChebyshevReaction(i, dynamic_cast<ChebyshevReaction&>(*rNew));
+        break;
+    case BLOWERSMASEL_RXN:
+        modifyBlowersMaselReaction(i, dynamic_cast<BlowersMaselReaction&>(*rNew));
         break;
     default:
         throw CanteraError("GasKinetics::modifyReaction",
@@ -372,6 +388,11 @@ void GasKinetics::modifyPlogReaction(size_t i, PlogReaction& r)
 void GasKinetics::modifyChebyshevReaction(size_t i, ChebyshevReaction& r)
 {
     m_cheb_rates.replace(i, r.rate);
+}
+
+void GasKinetics::modifyBlowersMaselReaction(size_t i, BlowersMaselReaction& r)
+{
+    m_blowersmasel_rates.replace(i, r.rate);
 }
 
 void GasKinetics::init()
