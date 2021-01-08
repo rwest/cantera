@@ -9,6 +9,7 @@ cdef extern from "cantera/kinetics/reaction_defs.h" namespace "Cantera":
     cdef int CHEBYSHEV_RXN
     cdef int CHEMACT_RXN
     cdef int INTERFACE_RXN
+    cdef int BLOWERSMASEL_RXN
 
 
 cdef class Reaction:
@@ -740,6 +741,93 @@ cdef class ChebyshevReaction(Reaction):
         r.rate.update_C(&logP)
         return r.rate.updateRC(logT, recipT)
 
+cdef class BlowersMasel:
+    def __cinit__(self, A=0, b=0, E=0, w=0, deltaH=0, init=True):
+        if init:
+            self.rate = new CxxBlowersMasel(A, b, E / gas_constant, w, deltaH)
+            self.reaction = None
+
+    def __dealloc__(self):
+        if self.reaction is None:
+            del self.rate
+
+    property pre_exponential_factor:
+        """
+        The pre-exponential factor *A* in units of m, kmol, and s raised to
+        powers depending on the reaction order.
+        """
+        def __get__(self):
+            return self.rate.preExponentialFactor()
+
+    property temperature_exponent:
+        """
+        The temperature exponent *b*.
+        """
+        def __get__(self):
+            return self.rate.temperatureExponent()
+
+    property activation_energy:
+        """
+        The activation energy *E* [J/kmol].
+        """
+        def __get__(self):
+            return self.rate.activationEnergy_R() * gas_constant
+
+    property bond_energy:
+        def __get__(self):
+            return self.rate.bondEnergy()
+
+    def __repr__(self):
+        return 'Arrhenius(A={:g}, b={:g}, E={:g}), w={:g}'.format(
+            self.pre_exponential_factor, self.temperature_exponent,
+            self.activation_energy, self.bond_energy)
+
+    def __call__(self, float T):
+        cdef double logT = np.log(T)
+        cdef double recipT = 1/T
+        return self.rate.updateRC(logT, recipT)
+
+
+cdef wrapBlowersMasel(CxxBlowersMasel* rate, Reaction reaction):
+    r = BlowersMasel(init=False)
+    r.rate = rate
+    r.reaction = reaction
+    return r
+
+cdef copyBlowersMasel(CxxBlowersMasel* rate):
+    r = BlowersMasel(rate.preExponentialFactor(), rate.temperatureExponent(),
+                  rate.activationEnergy_R() * gas_constant, rate.bondEnergy())
+    return r
+
+
+cdef class BlowersMaselReaction(Reaction):
+    """
+    A reaction which follows mass-action kinetics with a modified Arrhenius
+    reaction rate.
+    """
+    reaction_type = BLOWERSMASEL_RXN
+
+    property rate:
+        """ Get/Set the `Arrhenius` rate coefficient for this reaction. """
+        def __get__(self):
+            cdef CxxBlowersMaselReaction* r = <CxxBlowersMaselReaction*>self.reaction
+            return wrapBlowersMasel(&(r.rate), self)
+        def __set__(self, BlowersMasel rate):
+            cdef CxxBlowersMaselReaction* r = <CxxBlowersMaselReaction*>self.reaction
+            r.rate = deref(rate.rate)
+
+    property allow_negative_pre_exponential_factor:
+        """
+        Get/Set whether the rate coefficient is allowed to have a negative
+        pre-exponential factor.
+        """
+        def __get__(self):
+            cdef CxxBlowersMaselReaction* r = <CxxBlowersMaselReaction*>self.reaction
+            return r.allow_negative_pre_exponential_factor
+        def __set__(self, allow):
+            cdef CxxBlowersMaselReaction* r = <CxxBlowersMaselReaction*>self.reaction
+            r.allow_negative_pre_exponential_factor = allow
+
 
 cdef class InterfaceReaction(ElementaryReaction):
     """ A reaction occurring on an `Interface` (i.e. a surface or an edge) """
@@ -829,6 +917,8 @@ cdef Reaction wrapReaction(shared_ptr[CxxReaction] reaction):
         R = PlogReaction(init=False)
     elif reaction_type == CHEBYSHEV_RXN:
         R = ChebyshevReaction(init=False)
+    elif reaction_type == BLOWERSMASEL_RXN:
+        R = CxxBlowersMaselReaction(init=False)
     elif reaction_type == INTERFACE_RXN:
         R = InterfaceReaction(init=False)
     else:
@@ -853,6 +943,8 @@ cdef CxxReaction* newReaction(int reaction_type):
         return new CxxPlogReaction()
     elif reaction_type == CHEBYSHEV_RXN:
         return new CxxChebyshevReaction()
+    elif reaction_type == BLOWERSMASEL_RXN:
+        return new CxxBlowersMaselReaction()
     elif reaction_type == INTERFACE_RXN:
         return new CxxInterfaceReaction()
     else:

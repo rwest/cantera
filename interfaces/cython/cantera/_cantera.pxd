@@ -391,6 +391,20 @@ cdef extern from "cantera/kinetics/Reaction.h" namespace "Cantera":
     cdef cppclass CxxChebyshevReaction "Cantera::ChebyshevReaction" (CxxReaction):
         CxxChebyshevRate rate
 
+    cdef cppclass CxxBlowersMasel "Cantera::BlowersMasel":
+        CxxBlowersMasel()
+        CxxBlowersMasel(double, double, double, double, double)
+        double updateRC(double, double)
+        double preExponentialFactor()
+        double temperatureExponent()
+        double activationEnergy_R()
+        double bondEnergy()
+    
+    cdef cppclass CxxBlowersMaselReaction "Cantera::BlowersMaselReaction"(CxxReaction):
+        CxxBlowersMaselReaction()
+        CxxBlowersMasel rate
+        cbool allow_negative_pre_exponential_factor
+
     cdef cppclass CxxCoverageDependency "Cantera::CoverageDependency":
         CxxCoverageDependency(double, double, double)
         double a
