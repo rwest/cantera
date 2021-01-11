@@ -1026,6 +1026,10 @@ cdef class Arrhenius:
     cdef CxxArrhenius* rate
     cdef Reaction reaction # parent reaction, to prevent garbage collection
 
+cdef class BlowersMasel:
+    cdef CxxBlowersMasel* rate
+    cdef Reaction reaction
+
 cdef class Falloff:
     cdef shared_ptr[CxxFalloff] _falloff
     cdef CxxFalloff* falloff
