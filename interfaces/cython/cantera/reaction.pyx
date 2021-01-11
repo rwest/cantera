@@ -778,7 +778,7 @@ cdef class BlowersMasel:
             return self.rate.bondEnergy()
 
     def __repr__(self):
-        return 'Arrhenius(A={:g}, b={:g}, E={:g}), w={:g}'.format(
+        return 'BlowersMasel(A={:g}, b={:g}, E={:g}, w={:g})'.format(
             self.pre_exponential_factor, self.temperature_exponent,
             self.activation_energy, self.bond_energy)
 
@@ -802,7 +802,7 @@ cdef copyBlowersMasel(CxxBlowersMasel* rate):
 
 cdef class BlowersMaselReaction(Reaction):
     """
-    A reaction which follows mass-action kinetics with a modified Arrhenius
+    A reaction which follows mass-action kinetics with Blowers Masel
     reaction rate.
     """
     reaction_type = BLOWERSMASEL_RXN
@@ -918,7 +918,7 @@ cdef Reaction wrapReaction(shared_ptr[CxxReaction] reaction):
     elif reaction_type == CHEBYSHEV_RXN:
         R = ChebyshevReaction(init=False)
     elif reaction_type == BLOWERSMASEL_RXN:
-        R = CxxBlowersMaselReaction(init=False)
+        R = BlowersMaselReaction(init=False)
     elif reaction_type == INTERFACE_RXN:
         R = InterfaceReaction(init=False)
     else:
