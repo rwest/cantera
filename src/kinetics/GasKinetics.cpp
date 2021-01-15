@@ -26,7 +26,6 @@ void GasKinetics::update_rates_T()
     doublereal P = thermo().pressure();
     m_logStandConc = log(thermo().standardConcentration());
     doublereal logT = log(T);
-
     if (T != m_temp) {
         if (!m_rfn.empty()) {
             m_rates.update(T, logT, m_rfn.data());
@@ -42,7 +41,10 @@ void GasKinetics::update_rates_T()
         updateKc();
         m_ROP_ok = false;
         if (m_blowersmasel_rates.nReactions()) {
-            m_blowersmasel_rates.update(T, logT, m_rfn.data());
+            thermo().getPartialMolarEnthalpies(m_grt.data());
+            // Use the stoichiometric manager to find deltaS for each reaction.
+            getReactionDelta(m_grt.data(), m_dH.data());
+            m_blowersmasel_rates.updateBlowersMasel(T, logT, m_rfn.data(), m_dH.data());
         }
     }
 
@@ -328,6 +330,7 @@ void GasKinetics::addBlowersMaselReaction(BlowersMaselReaction& r)
 {
     // m_blowersmaselindx.push_back(nReactions()-1);
     m_blowersmasel_rates.install(nReactions()-1, r.rate);
+    blowers_masel_indices.push_back(nReactions()-1);
 }
 
 

@@ -71,8 +71,6 @@ protected:
     //! Reaction index of each falloff reaction
     std::vector<size_t> m_fallindx;
 
-    //! Reaction index of each Blowers Masel reaction
-    std::vector<size_t> m_blowersmaselindx;
 
     //! Map of reaction index to falloff reaction index (i.e indices in
     //! #m_falloff_low_rates and #m_falloff_high_rates)
@@ -105,6 +103,7 @@ protected:
     vector_fp falloff_work;
     vector_fp concm_3b_values;
     vector_fp concm_falloff_values;
+    vector_fp blowers_masel_indices;
     //!@}
 
     void processFalloffReactions();

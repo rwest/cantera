@@ -69,6 +69,13 @@ public:
         }
     }
 
+    void updateBlowersMasel(doublereal T, doublereal logT, doublereal* values, doublereal* deltaH) {
+        doublereal recipT = 1.0/T;
+        for (size_t i=0; i != m_rates.size(); i++) {
+            values[m_rxn[i]] = m_rates[i].updateRC(logT, recipT, deltaH[m_rxn[i]]);
+        }
+    }
+
     size_t nReactions() const {
         return m_rates.size();
     }

@@ -935,6 +935,8 @@ protected:
     //! Net rate-of-progress for each reaction
     vector_fp m_ropnet;
 
+    vector_fp m_dH;
+
     //! @see skipUndeclaredSpecies()
     bool m_skipUndeclaredSpecies;
 
