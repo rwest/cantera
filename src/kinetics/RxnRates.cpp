@@ -37,8 +37,9 @@ BlowersMasel::BlowersMasel()
 {
 }
 
-BlowersMasel::BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w, doublereal deltaH)
+BlowersMasel::BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w)
     : m_b(b)
+    , m_E(E)
     , m_A(A)
     , m_w(w)
 {
@@ -46,15 +47,6 @@ BlowersMasel::BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal 
         m_logA = -1.0E300;
     } else {
         m_logA = std::log(m_A);
-    }
-    if (deltaH < -4 * E) {
-        m_E = 0;
-    } else if (deltaH > 4 * E) {
-        m_E = deltaH;
-    } else {
-        double vp = 2 * m_w * ((m_w + E) / (m_w - E));
-        double Ea = (m_w + deltaH / 2) * pow((vp - 2 * m_w + deltaH),2) / (pow(vp, 2) - pow((4 * m_w), 2) + pow(deltaH, 2));
-        m_E = Ea;
     }
 }
 

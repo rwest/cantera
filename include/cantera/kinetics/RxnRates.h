@@ -138,9 +138,8 @@ public:
     /// @param b Temperature exponent. Non-dimensional.
     /// @param E Activation energy in temperature units. Kelvin.
     /// @param w bond energy of the bond being formed or broke
-    /// @param deltaH enthalpy change of this reaction
 
-    BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w, doublereal deltaH);
+    BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w);
 
     //! Update concentration-dependent parts of the rate coefficient.
     /*!
@@ -151,41 +150,45 @@ public:
     }
 
     /**
-     * Update the value of the natural logarithm of the rate constant.
-     */
-    doublereal updateLog(doublereal logT, doublereal recipT) const {       
-        return m_logA + m_b*logT - m_E*recipT;
-    }
-
-    /**
      * Update the value the rate constant.
      *
      * This function returns the actual value of the rate constant. It can be
      * safely called for negative values of the pre-exponential factor.
      */
-    doublereal updateRC(doublereal logT, doublereal recipT) const {
+    doublereal updateRC(doublereal logT, doublereal recipT, doublereal deltaH) {
+        double Ea = m_E * GasConstant;
+        if (deltaH < -4 * Ea) {
+            m_E = 0;
+        } else if (deltaH > 4 * Ea) {
+            m_E = deltaH / GasConstant;
+        } else {
+            double m_w_ = m_w * GasConstant;
+            double vp = 2 * m_w_ * ((m_w_ + Ea) / (m_w_ - Ea));
+            double m_Ea = (m_w_ + deltaH / 2) * pow((vp - 2 * m_w_ + deltaH),2) / (pow(vp, 2) - pow((4 * m_w_), 2) + pow(deltaH, 2));
+            m_E = m_Ea / GasConstant;
+        }
         return m_A * std::exp(m_b*logT - m_E*recipT);
     }
 
     //! Return the pre-exponential factor *A* (in m, kmol, s to powers depending
     //! on the reaction order)
-    double preExponentialFactor() const {
+    double preExponentialFactor() {
         return m_A;
     }
 
     //! Return the temperature exponent *b*
-    double temperatureExponent() const {
+    double temperatureExponent() {
         return m_b;
     }
 
     //! Return the activation energy divided by the gas constant (i.e. the
     //! activation temperature) [K]
-    doublereal activationEnergy_R() const {
+    doublereal activationEnergy_R() {
         return m_E;
     }
 
     //! Return the bond energy *w*
-    doublereal bondEnergy() const {
+    doublereal bondEnergy() {
         return m_w;
     }    
 
