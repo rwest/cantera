@@ -393,12 +393,14 @@ cdef extern from "cantera/kinetics/Reaction.h" namespace "Cantera":
 
     cdef cppclass CxxBlowersMasel "Cantera::BlowersMasel":
         CxxBlowersMasel()
-        CxxBlowersMasel(double, double, double, double, double)
-        double updateRC(double, double)
+        CxxBlowersMasel(double, double, double, double)
+        double updateRC(double, double, double)
         double preExponentialFactor()
         double temperatureExponent()
         double activationEnergy_R()
+        double activationEnergy0_R()
         double bondEnergy()
+
     
     cdef cppclass CxxBlowersMaselReaction "Cantera::BlowersMaselReaction"(CxxReaction):
         CxxBlowersMaselReaction()

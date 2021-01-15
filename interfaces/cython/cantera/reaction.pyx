@@ -742,9 +742,9 @@ cdef class ChebyshevReaction(Reaction):
         return r.rate.updateRC(logT, recipT)
 
 cdef class BlowersMasel:
-    def __cinit__(self, A=0, b=0, E=0, w=0, deltaH=0, init=True):
+    def __cinit__(self, A=0, b=0, E=0, w=0, init=True):
         if init:
-            self.rate = new CxxBlowersMasel(A, b, E / gas_constant, w, deltaH)
+            self.rate = new CxxBlowersMasel(A, b, E / gas_constant, w)
             self.reaction = None
 
     def __dealloc__(self):
@@ -775,17 +775,17 @@ cdef class BlowersMasel:
 
     property bond_energy:
         def __get__(self):
-            return self.rate.bondEnergy()
+            return self.rate.bondEnergy() * gas_constant
 
     def __repr__(self):
-        return 'BlowersMasel(A={:g}, b={:g}, E={:g}, w={:g})'.format(
+        return 'BlowersMasel(A={:g}, b={:g}, E_intrinsic={:g}, w={:g})'.format(
             self.pre_exponential_factor, self.temperature_exponent,
             self.activation_energy, self.bond_energy)
 
-    def __call__(self, float T):
+    def __call__(self, float T, float dH):
         cdef double logT = np.log(T)
         cdef double recipT = 1/T
-        return self.rate.updateRC(logT, recipT)
+        return self.rate.updateRC(logT, recipT, dH)
 
 
 cdef wrapBlowersMasel(CxxBlowersMasel* rate, Reaction reaction):
@@ -793,12 +793,6 @@ cdef wrapBlowersMasel(CxxBlowersMasel* rate, Reaction reaction):
     r.rate = rate
     r.reaction = reaction
     return r
-
-cdef copyBlowersMasel(CxxBlowersMasel* rate):
-    r = BlowersMasel(rate.preExponentialFactor(), rate.temperatureExponent(),
-                  rate.activationEnergy_R() * gas_constant, rate.bondEnergy())
-    return r
-
 
 cdef class BlowersMaselReaction(Reaction):
     """
