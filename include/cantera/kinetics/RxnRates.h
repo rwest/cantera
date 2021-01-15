@@ -103,15 +103,15 @@ protected:
  * A reaction rate coefficient of the following form.
  *
  *   \f[
- *        E = 0  if DeltaH < -4E_0
- *        E = DeltaH   if DeltaH > 4E_0
- *        E = (w_0 + DeltaH / 2)(V_P - 2w_0 + DeltaH)^2 / (V_P^^2 - 4w_0^2 + DeltaH^2)
+ *        Ea = 0  if DeltaH < -4 E_0
+ *        Ea = DeltaH   if DeltaH > 4 E_0
+ *        Ea = (w_0 + DeltaH / 2)(V_P - 2w_0 + DeltaH)^2 / (V_P^^2 - 4w_0^2 + DeltaH^2)
  *        where
  *        V_P = 2w_0 (w_0 + E_0) / (w_0 - E_0)
  *        and w_0 is  theaverage of the bond dissociation energy of the 
  *        bond breaking and that beingformed, which can be approximated as
- *        arbitrary high value like 1000kJ/mol as long as w_0 >= 2E_0  
- *        k_f =  A T^b \exp (-E/RT)
+ *        arbitrary high value like 1000kJ/mol as long as w_0 >= 2 E_0
+ *        k_f =  A T^b \exp (-Ea/RT)
  *   \f]
  */
 
@@ -156,18 +156,8 @@ public:
      * safely called for negative values of the pre-exponential factor.
      */
     doublereal updateRC(doublereal logT, doublereal recipT, doublereal deltaH) {
-        double Ea = m_E * GasConstant;
-        if (deltaH < -4 * Ea) {
-            m_E = 0;
-        } else if (deltaH > 4 * Ea) {
-            m_E = deltaH / GasConstant;
-        } else {
-            double m_w_ = m_w * GasConstant;
-            double vp = 2 * m_w_ * ((m_w_ + Ea) / (m_w_ - Ea));
-            double m_Ea = (m_w_ + deltaH / 2) * pow((vp - 2 * m_w_ + deltaH),2) / (pow(vp, 2) - pow((4 * m_w_), 2) + pow(deltaH, 2));
-            m_E = m_Ea / GasConstant;
-        }
-        return m_A * std::exp(m_b*logT - m_E*recipT);
+        double Ea = activationEnergy_R(deltaH); // will be in temperature units (Kelvin)
+        return m_A * std::exp(m_b * logT - Ea * recipT);
     }
 
     //! Return the pre-exponential factor *A* (in m, kmol, s to powers depending
@@ -181,10 +171,30 @@ public:
         return m_b;
     }
 
-    //! Return the activation energy divided by the gas constant (i.e. the
-    //! activation temperature) [K]
-    doublereal activationEnergy_R() {
-        return m_E;
+    //! Return the intrinsic activation energy divided by the gas constant (i.e. the
+    //! intrinsic activation temperature) [K]
+    doublereal intrinsicActivationEnergy_R() {
+        return m_E0;
+    }
+
+    //! Return the actual activation energy (a function of the delta H of reaction)
+    //! divided by the gas constant (i.e. the activation temperature) [K]
+    doublereal activationEnergy_R(doublereal deltaH) {
+        double Ea; // will be in temperature units (Kelvin)
+        double deltaH_R = deltaH / GasConstant // deltaH in temperature units (Kelvin)
+        if (deltaH_R < -4 * m_E0) {
+            Ea = 0;
+        } else if (deltaH_R > 4 * m_E0) {
+            Ea = deltaH_R;
+        } else {
+            // m_w is in Kelvin
+            // vp is in Kelvin
+            double vp = 2 * m_w * ((m_w + m_E0) / (m_w - m_E0));
+            double vp_2w_dH = (vp - 2 * m_w + deltaH_R) // (Vp - 2 w + dH)
+            Ea = (m_w + deltaH_R / 2) * (vp_2w_dH * vp_2w_dH) / 
+                 (vp * vp - 16 * m_w * m_w + deltaH_R * deltaH_R); // in Kelvin
+        }
+        return Ea
     }
 
     //! Return the bond energy *w*
@@ -193,7 +203,7 @@ public:
     }    
 
 protected:
-    doublereal m_logA, m_b, m_E, m_A, m_w;
+    doublereal m_logA, m_b, m_E0, m_A, m_w;
 };
 
 /**
