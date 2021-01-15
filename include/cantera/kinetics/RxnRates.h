@@ -136,10 +136,10 @@ public:
     ///     (kmol, m, s). The actual units depend on the reaction
     ///     order and the dimensionality (surface or bulk).
     /// @param b Temperature exponent. Non-dimensional.
-    /// @param E Activation energy in temperature units. Kelvin.
+    /// @param E0 Activation energy in temperature units. Kelvin.
     /// @param w bond energy of the bond being formed or broken, in temperature unts. Kelvin.
 
-    BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w);
+    BlowersMasel(doublereal A, doublereal b, doublereal E0, doublereal w);
 
     //! Update concentration-dependent parts of the rate coefficient.
     /*!

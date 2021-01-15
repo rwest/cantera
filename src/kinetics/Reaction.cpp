@@ -460,22 +460,22 @@ BlowersMasel readBlowersMasel(const Reaction& R, const AnyValue& rate,
                         const Kinetics& kin, const UnitSystem& units,
                         int pressure_dependence=0)
 {
-    double A, b, Ta, w;
+    double A, b, Ta0, w;
     Units rc_units = rateCoeffUnits(R, kin, pressure_dependence);
     if (rate.is<AnyMap>()) {
         auto& rate_map = rate.as<AnyMap>();
         A = units.convert(rate_map["A"], rc_units);
         b = rate_map["b"].asDouble();
-        Ta = units.convertActivationEnergy(rate_map["Ea"], "K");
+        Ta0 = units.convertActivationEnergy(rate_map["E0"], "K");
         w = units.convertActivationEnergy(rate_map["w"], "K");
     } else {
         auto& rate_vec = rate.asVector<AnyValue>(4);
         A = units.convert(rate_vec[0], rc_units);
         b = rate_vec[1].asDouble();
-        Ta = units.convertActivationEnergy(rate_vec[2], "K");
+        Ta0 = units.convertActivationEnergy(rate_vec[2], "K");
         w = units.convertActivationEnergy(rate_vec[3], "K");
     }
-    return BlowersMasel(A, b, Ta, w);
+    return BlowersMasel(A, b, Ta0, w);
 }
 
 void setupReaction(Reaction& R, const XML_Node& rxn_node)

@@ -31,15 +31,15 @@ Arrhenius::Arrhenius(doublereal A, doublereal b, doublereal E)
 BlowersMasel::BlowersMasel()
     : m_logA(-1.0E300)
     , m_b(0.0)
-    , m_E(0.0)
+    , m_E0(0.0)
     , m_A(0.0)
     , m_w(0.0)
 {
 }
 
-BlowersMasel::BlowersMasel(doublereal A, doublereal b, doublereal E, doublereal w)
+BlowersMasel::BlowersMasel(doublereal A, doublereal b, doublereal E0, doublereal w)
     : m_b(b)
-    , m_E(E)
+    , m_E0(E0)
     , m_A(A)
     , m_w(w)
 {
