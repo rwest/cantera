@@ -1065,7 +1065,9 @@ classdef ThermoPhase < handle
                 end
                 calllib(ct, 'thermo_setMoleFractions', tp.tp_id, ...
                         nsp, xx, norm);
-            end                   
+            elseif isa(xx, 'char')
+                calllib(ct, 'thermo_setMoleFractionsByName', tp.tp_id, xx);
+            end                                         
         end
         
         function set.Y(tp, yy)
@@ -1078,6 +1080,8 @@ classdef ThermoPhase < handle
                 end
                 calllib(ct, 'thermo_setMassFractions', tp.tp_id, ...
                         nsp, yy, norm);
+            elseif isa(yy, 'char')
+                calllib(ct, 'thermo_setMassFracitonsByName', tp.tp_id, yy);
             end                   
         end  
         
