@@ -1,5 +1,5 @@
 classdef Solution < handle & ThermoPhase & Kinetics & Transport
-    properties (Access = private, Hidden = true)
+    properties 
         tp
     end
     methods 
@@ -20,6 +20,7 @@ classdef Solution < handle & ThermoPhase & Kinetics & Transport
                 trans = 'default';
             end
             s@Transport(tp, trans, 0);
+            s.tp_id = tp.tp_id;
         end
         
         % Delete the kernel objects associated with a solution
