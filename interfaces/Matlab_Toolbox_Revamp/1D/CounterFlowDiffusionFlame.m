@@ -132,7 +132,7 @@ function flame = CounterFLowDiffusionFLame(left, flow, right, tp_f, tp_o, oxidiz
     % These values to be used for energy equation solution. Method is based
     % on the Burke-Schumann model.
     
-    nz = flow.nPoints(flow);
+    nz = flow.nPoints;
     zm = zeros(1, nz);
     u = zeros(1, nz);
     v = zeros(1, nz);
