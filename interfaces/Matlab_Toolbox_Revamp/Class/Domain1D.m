@@ -396,7 +396,7 @@ classdef Domain1D < handle
             % parameter mdot:
             %    Mass flow rate.
             checklib;
-            calllib(ct, 'bdry_setTemperature', d.dom_id, mdot);
+            calllib(ct, 'bdry_setMdot', d.dom_id, mdot);
         end
         
         function setMoleFractions(d, x)
