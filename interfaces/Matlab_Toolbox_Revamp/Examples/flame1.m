@@ -79,7 +79,7 @@ s = Outlet('out');
 % to create the flame object.
 %
 fl = flame(gas, burner, f, s);
-setMaxJacAge(fl, max_jacobian_age(1),  max_jacobian_age(2));
+fl.setMaxJacAge(max_jacobian_age(1),  max_jacobian_age(2));
 
 % if the starting solution is to be read from a previously-saved
 % solution, uncomment this line and edit the file name and solution id.
