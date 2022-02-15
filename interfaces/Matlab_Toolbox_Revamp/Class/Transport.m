@@ -22,7 +22,7 @@ classdef Transport < handle
             if ~isa(tp, 'ThermoPhase')
                 error(['The first argument must be an ', ...
                       'instance of class ThermoPhase']);
-            else
+            else            
                 tr.th = tp;
                 if strcmp(model, 'default')
                     tr.tr_id = calllib(ct, 'trans_newDefault', ...
@@ -32,6 +32,7 @@ classdef Transport < handle
                                        tp.tp_id, loglevel);
                 end
             end
+            tr.tp_id = tp.tp_id;
         end
         
         %% Utility methods
