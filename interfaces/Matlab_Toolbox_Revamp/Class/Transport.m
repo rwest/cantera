@@ -32,6 +32,7 @@ classdef Transport < handle
                                        tp.tp_id, loglevel);
                 end
             end
+            tr.tp_id = tp.tp_id;
         end
         
         %% Utility methods
