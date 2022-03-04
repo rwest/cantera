@@ -10,7 +10,7 @@ classdef Wall < handle
     
     methods
         %% Wall class constructor
-        
+
         function x = Wall(left, right, area, k, u, q, v)
             % A Wall separates two reactors, or a reactor and a reservoir.
             % A Wall has a finite area, may conduct heat between the two
@@ -134,7 +134,7 @@ classdef Wall < handle
         end
         
         %% Utility methods
-        
+
         function clear(w)
             % Clear the Wall object from the memory.
             checklib;
@@ -157,7 +157,7 @@ classdef Wall < handle
         end
                
         %% ReactorNet set methods
-        
+
         function set.area(w, a)
             % Set the area of a wall.
             checklib;
@@ -225,7 +225,7 @@ classdef Wall < handle
         end         
                 
         %% ReactorNet get methods
-        
+                
         function a = get.area(w)
             % Get the area of the wall in m^2.
             checklib;

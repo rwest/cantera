@@ -63,7 +63,7 @@ classdef ThermoPhase < handle
     
     methods
         %% ThermoPhase class constructor
-        
+
         function tp = ThermoPhase(src, id)
             checklib;
             if nargin > 2
@@ -78,7 +78,7 @@ classdef ThermoPhase < handle
         end
         
         %% Utility methods
-        
+
         function display(tp, threshold)
             % Display thermo properties
             
@@ -109,7 +109,7 @@ classdef ThermoPhase < handle
         end
         
         %% PhaseGet single methods
-        
+
         function amu = atomicMasses(tp)
             % Get the atomic masses of the elements.
             %
@@ -174,7 +174,7 @@ classdef ThermoPhase < handle
                             tp.tp_id, name) + 1;
                 if k > 1e3
                     warning(['Element ', name, ...
-                           ' does not exist in the phase']);
+                             ' does not exist in the phase']);
                     k = -1;
                 end
             else
@@ -365,7 +365,7 @@ classdef ThermoPhase < handle
                     if buflen > 0
                         aa = char(zeros(1, buflen));
                         [~, aa] = calllib(ct, 'thermo_getSpeciesName', ...
-                                                tp.tp_id, ksp, buflen, aa);
+                                          tp.tp_id, ksp, buflen, aa);
                         nm{i, j} = aa;
                     end
                 end
@@ -521,7 +521,7 @@ classdef ThermoPhase < handle
         end
         
         %% ThermoGet single methods
-        
+
         function mu = chemical_potentials(tp)
             % Get the chemical potentials of the species.
             %
@@ -830,7 +830,7 @@ classdef ThermoPhase < handle
         end        
          
         %% ThermoGet multi methods
-        
+
         function output = get.DP(tp)
             output = {tp.D, tp.P};
         end
@@ -1012,7 +1012,7 @@ classdef ThermoPhase < handle
         end             
         
         %% PhaseSet single methods
-        
+
         function tp = setElectricPotential(tp, phi)
             % Set the electric potential in V.
             calllib(ct, 'thermo_setElectricPotential', tp.tp_id, phi);
@@ -1086,7 +1086,7 @@ classdef ThermoPhase < handle
         end  
         
         %% PhaseSet multi methods
-        
+
         function set.DP(tp, input)
             checklib;
             d = input{1};

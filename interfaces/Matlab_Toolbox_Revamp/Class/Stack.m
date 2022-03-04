@@ -7,7 +7,7 @@ classdef Stack < handle
     
     methods
         %% Stack class constructor
-        
+
         function s = Stack(domains)
             % A stack object is a container for one-dimensional domains,
             % which are instances of class Domain1D. The domains are of two
@@ -39,7 +39,7 @@ classdef Stack < handle
         end
         
         %% Utility Methods
-        
+
         function st_clear(s)
             % Delete the Sim1D object
             checklib;
@@ -63,7 +63,7 @@ classdef Stack < handle
         end
         
         %% Stack Methods
-        
+
         function n = stackIndex(s, name)
             % Get the index of a domain in a stack given its name.
             %
@@ -346,7 +346,7 @@ classdef Stack < handle
             %    step to be taken first time the steady-state solution
             %    attempted. If this failed, two time steps would be taken.
             checklib;
-            calllib(ct, 'sim1D_', s.st_id, ...
+            calllib(ct, 'sim1D_TimeStep', s.st_id, ...
                     stepsize, length(steps), steps); 
         end
         

@@ -36,7 +36,7 @@ loglevel  = 1;                      % amount of diagnostic output (0
 refine_grid = 1;                    % 1 to enable refinement, 0 to
                                     % disable
 
-%% Create the gas object 
+%% Create the gas object
 %
 % This object will be used to evaluate all thermodynamic, kinetic,
 % and transport properties
@@ -47,7 +47,7 @@ gas = Solution(rxnmech, 'gri30', 'Mix');
 gas.TPX = {tin, p, comp2};
 
 %% Create the flow object
-
+%
 f = AxisymmetricFlow(gas,'flow');
 f.setPressure(p);
 f.setupGrid(initial_grid);
@@ -65,7 +65,7 @@ inlet_o.setMdot(mdot_o);
 inlet_o.setMoleFractions(comp1);
 
 %% Create the fuel inlet
-
+%
 inlet_f = Inlet('fuel_inlet');
 inlet_f.T = tin;
 inlet_f.setMdot(mdot_f);

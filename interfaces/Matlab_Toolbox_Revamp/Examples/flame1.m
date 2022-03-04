@@ -37,7 +37,7 @@ refine_grid = 1;                    % 1 to enable refinement, 0 to
                                     % disable
 max_jacobian_age = [5, 10];
 
-%% Create the gas object 
+%% Create the gas object
 %
 % This object will be used to evaluate all thermodynamic, kinetic,
 % and transport properties
@@ -47,7 +47,7 @@ gas = Solution(rxnmech, 'ohmech', 'Mix');
 % set its state to that of the unburned gas at the burner
 gas.TPX = {tburner, p, comp};
 
-%% Create the flow object 
+%% Create the flow object
 
 f = AxisymmetricFlow(gas, 'flow');
 f.setPressure(p);
@@ -55,7 +55,7 @@ f.setupGrid(initial_grid);
 f.setSteadyTolerances('default', tol_ss{:});
 f.setTransientTolerances('default', tol_ts{:});
 
-%% Create the burner 
+%% Create the burner
 %
 %  The burner is an Inlet object. The temperature, mass flux,
 %  and composition (relative molar) may be specified. 
@@ -98,7 +98,7 @@ fl.setRefineCriteria(2, 200.0, 0.05, 0.1);
 fl.solve(1, 1);
 fl.saveSoln('h2fl.xml', 'energy', ['solution with energy equation']);
 
-%% Show statistics 
+%% Show statistics
 
 fl.writeStats;
 elapsed = cputime - t0;

@@ -9,7 +9,7 @@ classdef Mixture < handle
     
     methods
         %% Mixture class constructor
-        
+
         function m = Mixture(phases)
             % To construct a mixture, supply a cell array of phases and mole
             % numbers:
@@ -70,7 +70,7 @@ classdef Mixture < handle
         end
 
         %% Utility methods
-        
+
         function display(m)
             % Display the state of the mixture on the terminal.
             
@@ -79,7 +79,7 @@ classdef Mixture < handle
             for n = 1:np
                 s = [sprintf('\n*******************    Phase %d', n) ...
                     sprintf('    ******************************\n\n Moles: %12.6g', ...
-                    phaseMoles(m, n))];
+                            phaseMoles(m, n))];
                 disp(s);
                 display(m.phases{n, 1});
             end      
@@ -93,7 +93,7 @@ classdef Mixture < handle
         end
         
         %% Mixture Get methods
-        
+
         function addPhase(m, phase, moles)
             % Add a phase to the mixture
             %
@@ -219,7 +219,7 @@ classdef Mixture < handle
         end
         
         %% Mixture Set methods
-        
+
         function m = set.T(m, temp)
             % Set the mixture temperature.
             %

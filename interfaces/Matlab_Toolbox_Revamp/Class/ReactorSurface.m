@@ -8,7 +8,7 @@ classdef ReactorSurface < handle
     
     methods
         %% ReactorSurface class constructor
-        
+
         function s = ReactorSurface(kleft, reactor, area)
             % A surface on which heterogeneous reactions take place. The
             % mechanism object (typically an instance of class 'Interface')
@@ -65,7 +65,7 @@ classdef ReactorSurface < handle
         end
         
         %% Utility methods
-        
+
         function clear(s)
             % Clear the ReactorSurface object from the memory.
             checklib;
@@ -80,7 +80,7 @@ classdef ReactorSurface < handle
         end
         
         %% ReactorSurface get methods
-        
+
         function a = get.area(s)
             % Get the areaof the reactor surface in m^2.
             checklib;
@@ -88,7 +88,7 @@ classdef ReactorSurface < handle
         end
         
         %% ReactorSurface set methods
-        
+                
         function set.area(s, a)
             % Set the area of a reactor surface
             checklib;

@@ -19,7 +19,7 @@ classdef Reactor < handle
     
     methods
         %% Reactor class constructor
-        
+
         function r = Reactor(content, typ)
             % A 'Reactor' object simulates a perfectly-stirred reactor. It
             % has a time-dependent tstate, and may be coupled to other
@@ -67,7 +67,7 @@ classdef Reactor < handle
         end
         
         %% Utility methods
-        
+
         function clear(r)
             % Clear the reactor from memory.
             checklib;
@@ -130,7 +130,7 @@ classdef Reactor < handle
         end
         
         %% Reactor get methods
-        
+
         function temperature = get.T(r)
             % Get the temperature of the reactor.
             %
@@ -244,7 +244,7 @@ classdef Reactor < handle
         end        
         
         %% Reactor set methods
-        
+                
         function setInitialVolume(r, v0)
             % Set the initial reactor volume.
             %

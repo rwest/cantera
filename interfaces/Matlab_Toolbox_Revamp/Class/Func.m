@@ -10,7 +10,7 @@ classdef Func < handle
   
     methods
         %% Functor class constructor
-        
+
         function x = Func(typ, n, p)
             % Functor class constructor.
             %
@@ -116,7 +116,7 @@ classdef Func < handle
         end
                
         %% Utility methods
-        
+
         function clear(f)
             % Clear the functor from memory.
             checklib;
@@ -137,7 +137,7 @@ classdef Func < handle
         end
         
         %% Functor methods
-        
+                
         function r = plus(a, b)
             % Get a functor representing the sum two input functors 'a' and
             % 'b'.           
@@ -269,4 +269,3 @@ classdef Func < handle
        
     end
 end
-
