@@ -51,7 +51,7 @@ loglevel  = 1;                      % amount of diagnostic output
 refine_grid = 1;                    % 1 to enable refinement, 0 to
                                     % disable
 
-%% Create the gas object 
+%% Create the gas object
 %
 % This object will be used to evaluate all thermodynamic, kinetic,
 % and transport properties
@@ -63,7 +63,7 @@ refine_grid = 1;                    % 1 to enable refinement, 0 to
 gas = Solution('ptcombust.yaml', 'gas', transport);
 gas.TPX = {tinlet, p, comp1};
 
-%% create the interface object 
+%% create the interface object
 %
 % This object will be used to evaluate all surface chemical production
 % rates. It will be created from the interface definition 'Pt_surf'
@@ -86,7 +86,7 @@ surf_phase.advanceCoverages(1.0);
 % for 1-D simulations. These will be 'stacked' together to create
 % the complete simulation.
 
-%% create the flow object 
+%% create the flow object
 %
 % The flow object is responsible for evaluating the 1D governing
 % equations for the flow. We will initialize it with the gas
@@ -100,7 +100,7 @@ flow.setupGrid(initial_grid);
 flow.setSteadyTolerances('default', tol_ss{:});
 flow.setTransientTolerances('default', tol_ts{:});
 
-%% create the inlet 
+%% create the inlet
 %
 %  The temperature, mass flux, and composition (relative molar) may be
 %  specified. This object provides the inlet boundary conditions for
@@ -113,7 +113,7 @@ inlt.T = tinlet;
 inlt.setMdot(mdot);
 inlt.setMoleFractions(comp1);
 
-%% create the surface 
+%% create the surface
 %
 % This object provides the surface boundary conditions for the flow
 % equations. By supplying object surface_phase as an argument, the
@@ -148,7 +148,7 @@ sim1D
 %setTimeStep(fl, 1.0e-5, [1, 3, 6, 12]);
 %setMaxJacAge(fl, 4, 5);
 
-%% Solution 
+%% Solution
 
 % start with the energy equation on
 flow.enableEnergy;
@@ -191,14 +191,14 @@ sim1D
 % save the solution
 sim1D.saveSoln('catcomb.xml', 'energy', ['solution with energy equation']);
 
-%% Show statistics 
+%% Show statistics
 
 sim1D.writeStats;
 elapsed = cputime - t0;
 e = sprintf('Elapsed CPU time: %10.4g',elapsed);
 disp(e);
 
-%% Make plots 
+%% Make plots
 
 clf;
 

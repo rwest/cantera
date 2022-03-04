@@ -32,7 +32,7 @@ tol_ts = {1.0e-3, 1.0e-9};        % {rtol atol} for time stepping
 loglevel = 1;                     % Amount of diagnostic output (0 to 5)
 refine_grid = 1;                  % 1 to enable refinement, 0 to disable
 
-%% Create the gas objects for the fuel and oxidizer streams 
+%% Create the gas objects for the fuel and oxidizer streams
 %
 % These objects will be used to evaluate all thermodynamic, kinetic, and 
 % transport properties.

@@ -10,7 +10,7 @@ classdef ReactorNet < handle
 
     methods
         %% ReactorNet class constructor
-        
+
         function r = ReactorNet(reactors)
             % A 'ReactorNet' object is a container that holds one ormore
             % 'Reactor' objects in a network. 'ReactorNet' objects are used
@@ -48,7 +48,7 @@ classdef ReactorNet < handle
         end
         
         %% Utility methods
-        
+
         function clear(r)
             % Clear the ReactorNet object from the memory.
             checklib;
@@ -85,7 +85,7 @@ classdef ReactorNet < handle
         end
                
         %% ReactorNet set methods
-        
+
         function setInitialTime(r, t)
             % Set the initial time of the integration.
             %
@@ -125,7 +125,7 @@ classdef ReactorNet < handle
         end
         
         %% ReactorNet get methods
-        
+                
         function t = get.dt(r)
             % Get the internal time step in s.
             %

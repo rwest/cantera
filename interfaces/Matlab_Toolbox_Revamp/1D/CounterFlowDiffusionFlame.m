@@ -76,7 +76,7 @@ function flame = CounterFLowDiffusionFLame(left, flow, right, tp_f, tp_o, oxidiz
     phi = sFuel/sOx;
     zst = 1.0/(1.0 - phi);  
 
-    %% Compute the stoichiometric mass fractions of each species. 
+    %% Compute the stoichiometric mass fractions of each species.
     % Use this to set the fuel gas object and calculate adiabatic flame
     % temperature and equilibrium composition. 
 

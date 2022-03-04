@@ -8,7 +8,7 @@ classdef Domain1D < handle
     
     methods
         %% Domain1D class constructor.
-        
+
         function d = Domain1D(a, b, c)
             % parameter a:
             %    Integer type of domain. Possible values are:
@@ -86,7 +86,7 @@ classdef Domain1D < handle
         end
         
         %% Utility Methods
-        
+
         function dom_clear(d)
             % Delete the Domain1D object
             checklib;
@@ -94,7 +94,7 @@ classdef Domain1D < handle
         end
         
         %% Domain Methods
-        
+
         function n = componentIndex(d, name)
             % Get the index of a component given its name
             %
@@ -531,4 +531,3 @@ classdef Domain1D < handle
 
     end
 end
-

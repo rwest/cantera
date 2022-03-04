@@ -9,7 +9,7 @@ classdef FlowDevice < handle
     
     methods
         %% FlowDevice class constructor
-        
+
         function x = FlowDevice(typ)
             % Flow Device class constructor.
             %
@@ -41,7 +41,7 @@ classdef FlowDevice < handle
         end
         
         %% Utility methods
-        
+
         function clear(f)
             % Clear the specified flow device from memory.
             checklib;
@@ -49,7 +49,7 @@ classdef FlowDevice < handle
         end
         
         %% FlowDevice methods
-        
+
         function install(f, upstream, downstream)
             % Install a flow device between reactors or reservoirs.
             %
