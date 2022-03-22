@@ -1,4 +1,4 @@
-function flame = CounterFLowDiffusionFLame(left, flow, right, tp_f, tp_o, oxidizer)
+function flame = CounterFlowDiffusionFlame(left, flow, right, tp_f, tp_o, oxidizer)
     % Create a counter flow flame stack.
     % :param left:
     %    Object representing the left inlet, which must be created using
