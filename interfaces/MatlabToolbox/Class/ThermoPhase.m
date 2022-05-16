@@ -178,7 +178,7 @@ classdef ThermoPhase < handle
         
         %% PhaseGet single methods
 
-        function amu = atomicWeights(tp)
+        function amu = atomicMasses(tp)
             % ATOMICMASSES  Get the atomic masses of the elements.
             % x = tp.atomicMasses
             % :param tp:
