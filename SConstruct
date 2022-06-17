@@ -136,10 +136,10 @@ if "clean" in COMMAND_LINE_TARGETS:
         remove_file(name)
     for name in Path("site_scons").glob("**/*.pyc"):
         remove_file(name)
-    remove_file("interfaces/matlab/toolbox/cantera_shared.dll")
-    remove_file("interfaces/matlab/Contents.m")
-    remove_file("interfaces/matlab/ctpath.m")
-    for name in Path("interfaces/matlab/toolbox").glob("ctmethods.*"):
+    remove_file("interfaces/MatlabToolbox/matlab_legacy/toolbox/cantera_shared.dll")
+    remove_file("interfaces/MatlabToolbox/matlab_legacy/Contents.m")
+    remove_file("interfaces/MatlabToolbox/matlab_legacy/ctpath.m")
+    for name in Path("interfaces/MatlabToolbox/matlab_legacy/toolbox").glob("ctmethods.*"):
         remove_file(name)
 
     logger.status("Done removing output files.", print_level=False)
@@ -280,9 +280,9 @@ config_options = [
         "matlab_path",
         """Path to the MATLAB install directory. This should be the directory
            containing the 'extern', 'bin', etc. subdirectories. Typical values
-           are: "C:\\Program Files\\MATLAB\\R2021a" on Windows,
-           "/Applications/MATLAB_R2021a.app" on macOS, or
-           "/opt/MATLAB/R2021a" on Linux.""",
+           are: "C:\\Program Files\\MATLAB\\R2021b" on Windows,
+           "/Applications/MATLAB_R2021b.app" on macOS, or
+           "/opt/MATLAB/R2021b" on Linux.""",
         "", PathVariable.PathAccept),
     EnumOption(
         "f90_interface",
@@ -1763,7 +1763,7 @@ if env['layout'] == 'compact':
     env['ct_sampledir'] = pjoin(env['prefix'], 'samples')
     env["ct_docdir"] = pjoin(env["prefix"], "doc")
     env['ct_mandir'] = pjoin(env['prefix'], 'man1')
-    env['ct_matlab_dir'] = pjoin(env['prefix'], 'matlab', 'toolbox')
+    env['ct_matlab_dir'] = pjoin(env['prefix'], 'matlab', 'MatlabToolbox')
 else:
     env['ct_datadir'] = pjoin(env['prefix'], 'share', 'cantera', 'data')
     env['ct_sampledir'] = pjoin(env['prefix'], 'share', 'cantera', 'samples')
@@ -1771,10 +1771,10 @@ else:
     env['ct_mandir'] = pjoin(env['prefix'], 'share', 'man', 'man1')
     if env["layout"] == "conda":
         env["ct_matlab_dir"] = pjoin(
-            env["prefix"], "share", "cantera", "matlab", "toolbox")
+            env["prefix"], "share", "cantera", "matlab", "MatlabToolbox")
     else:
         env["ct_matlab_dir"] = pjoin(
-            env["prefix"], env["libdirname"], "cantera", "matlab", "toolbox")
+            env["prefix"], env["libdirname"], "cantera", "matlab", "MatlabToolbox")
 
 
 addInstallActions = ('install' in COMMAND_LINE_TARGETS or
@@ -1812,7 +1812,7 @@ if env['layout'] == 'debian':
     env['inst_mandir'] = pjoin(base, 'cantera-common', 'usr', 'share', 'man', 'man1')
 
     env['inst_matlab_dir'] = pjoin(base, 'cantera-matlab', 'usr',
-                                   env['libdirname'], 'cantera', 'matlab', 'toolbox')
+                                   env['libdirname'], 'cantera', 'matlab')
 
     env['inst_python_bindir'] = pjoin(base, 'cantera-python', 'usr', 'bin')
     env['python_prefix'] = pjoin(base, 'cantera-python3')
@@ -2076,7 +2076,7 @@ def postInstallMessage(target, source, env):
         ))
 
     if env["sphinx_docs"] or env["doxygen_docs"]:
-        name = "HTML documentation"
+        name = "HTMmatlabL documentation"
         install_message.append(locations_message.format(
             name="HTML documentation", location=env_dict["inst_docdir"]
         ))
@@ -2091,13 +2091,22 @@ def postInstallMessage(target, source, env):
         ))
 
     if env["matlab_toolbox"] == "y":
-        env["matlab_sample_loc"] = pjoin(env["ct_sampledir"], "matlab")
+        env["matlab_toolbox_legacy_loc"] = pjoin(env["ct_matlab_dir"], "matlab_legacy")
+        env["matlab_toolbox_new_loc"] = pjoin(env["ct_matlab_dir"], "matlab_new")        
+        env["matlab_sample_legacy_loc"] = pjoin(env["ct_sampledir"], "matlab_legacy")
+        env["matlab_sample_new_loc"] = pjoin(env["ct_sampledir"], "matlab_new")
         env["matlab_ctpath_loc"] = pjoin(env["ct_matlab_dir"], "ctpath.m")
         install_message.append(locations_message.format(
-            name="Matlab toolbox", location=env_dict["ct_matlab_dir"]
+            name="Matlab toolbox (legacy)", location=env_dict["matlab_toolbox_legacy_loc"]
         ))
         install_message.append(locations_message.format(
-            name="Matlab samples", location=env_dict["matlab_sample_loc"]
+            name="Matlab toolbox (new)", location=env_dict["matlab_toolbox_new_loc"]
+        ))
+        install_message.append(locations_message.format(
+            name="Matlab samples (legacy)", location=env_dict["matlab_sample_legacy_loc"]
+        ))
+        install_message.append(locations_message.format(
+            name="Matlab samples (new)", location=env_dict["matlab_sample_new_loc"]
         ))
         install_message.append(textwrap.dedent("""
             An m-file to set the correct matlab path for Cantera is at:

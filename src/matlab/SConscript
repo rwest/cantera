@@ -63,7 +63,7 @@ localenv.Append(CPPDEFINES=['MATLAB_MEX_FILE'],
 linklibs += localenv['sundials_libs']
 linklibs += localenv['blas_lapack_libs']
 
-ctmethods = build(localenv.SharedLibrary('#interfaces/matlab/toolbox/ctmethods',
+ctmethods = build(localenv.SharedLibrary('#interfaces/MatlabToolbox/matlab_legacy/toolbox/ctmethods',
                                          multi_glob(localenv, '.', 'cpp'),
                                          LIBPREFIX='',
                                          SHLIBPREFIX='',
@@ -88,21 +88,39 @@ def copy_var(target, source, env):
     else:
         env['python_module_loc_sc'] = globalenv['python_module_loc']
 
-target = localenv.SubstFile('#interfaces/matlab/ctpath.m',
-                            '#interfaces/matlab/ctpath.m.in')
-localenv.AddPreAction(target, copy_var)
-localenv.Depends(target, env['install_python_action'])
+legacy_target = localenv.SubstFile('#interfaces/MatlabToolbox/ctpath.m',
+                                   '#interfaces/MatlabToolbox/ctpath.m.in')
+localenv.AddPreAction(legacy_target, copy_var)
+localenv.Depends(legacy_target, env['install_python_action'])
+install('$inst_matlab_dir', legacy_target)
+
+# 'ctpath_legacy.m' 
+target = localenv.SubstFile('#interfaces/MatlabToolbox/ctpath_legacy.m',
+                            '#interfaces/MatlabToolbox/ctpath_legacy.m.in')
 install('$inst_matlab_dir', target)
 
+# 'ctpath_new.m' 
+new_target = localenv.SubstFile('#interfaces/MatlabToolbox/ctpath_new.m',
+                                '#interfaces/MatlabToolbox/ctpath_new.m.in')
+install('$inst_matlab_dir', new_target)
+
 # 'Contents.m'
-contents = localenv.SubstFile('#interfaces/matlab/Contents.m',
-                              '#interfaces/matlab/Contents.m.in')
+contents = localenv.SubstFile('#interfaces/MatlabToolbox/Contents.m',
+                              '#interfaces/MatlabToolbox/Contents.m.in')
 install('$inst_matlab_dir', contents)
 
-install(localenv.RecursiveInstall, '$inst_matlab_dir',
-        '#interfaces/matlab/toolbox',
+# Legacy toolbox
+
+install(localenv.RecursiveInstall, '$inst_matlab_dir/matlab_legacy',
+        '#interfaces/MatlabToolbox/matlab_legacy/toolbox',
         exclude=['dll$', 'exp$', 'lib$', 'ilk$', 'manifest$'])
-install(localenv.RecursiveInstall, '$inst_sampledir/matlab', '#samples/matlab')
+install(localenv.RecursiveInstall, '$inst_sampledir/matlab_legacy', '#samples/matlab_legacy')
+
+# New Toolbox
+install(localenv.RecursiveInstall, '$inst_matlab_dir/matlab_new',
+        '#interfaces/MatlabToolbox/matlab_new/',
+        exclude=['dll$', 'exp$', 'lib$', 'ilk$', 'manifest$'])
+install(localenv.RecursiveInstall, '$inst_sampledir/matlab_new', '#samples/matlab_new')
 
 if os.name == 'nt':
     shlib = [f for f in localenv['cantera_shlib']
