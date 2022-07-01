@@ -1,7 +1,7 @@
 .. _sec-matlab-documentation:
 
 Matlab Toolbox (New) Documentation
-==============================
+==================================
 
 .. toctree::
    :maxdepth: 2
