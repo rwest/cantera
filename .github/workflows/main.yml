@@ -642,3 +642,47 @@ jobs:
       shell: cmd
     - name: Test Cantera
       run: scons test show_long_tests=yes verbose_tests=yes --debug=time
+
+
+  run-matlab-examples:
+    name: Run the MATLAB examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.9', '3.10']
+      fail-fast: false
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+          architecture: x64
+      - name: Install Apt dependencies
+        run: |
+          sudo apt update
+          sudo apt install libboost-dev gfortran graphviz liblapack-dev libblas-dev gcc-5 g++-5
+      - name: Upgrade pip
+        run: python3 -m pip install -U pip setuptools wheel
+      - name: Install Python dependencies
+        run: python3 -m pip install ruamel.yaml scons numpy cython h5py pandas matplotlib scipy
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
+        with:
+          release: 2021a
+      - name: Build Cantera
+        run: python3 `which scons` build env_vars=all -j2 debug=n --debug=time -matlab_path='/usr/local/MATLAB/2021a/'
+      - name: Install
+        # spot-check installation locations
+        run: |
+          scons install
+          test -f ${CONDA_PREFIX}/lib/libcantera_shared.so
+          test -f ${CONDA_PREFIX}/matlab/MatlabToolbox/ctpath_new.m
+      - name: Run MATLAB script
+        uses: matlab-actions/run-command@v1
+        with:
+          command: ctpath_new 

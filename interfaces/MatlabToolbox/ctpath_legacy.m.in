@@ -1,3 +1,4 @@
+restoredefaultpath
 path('@ct_matlab_dir@/matlab_legacy', path)
 path('@ct_matlab_dir@/metlab_legacy/1D', path)
 setenv('PYTHON_CMD', '@python_cmd@')
