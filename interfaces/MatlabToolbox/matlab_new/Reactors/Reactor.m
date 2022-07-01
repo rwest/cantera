@@ -52,7 +52,7 @@ classdef Reactor < handle
             end
             
             r.type = char(typ);
-            r.id = calllib(ct, 'reactor_new2', typ);
+            r.id = calllib(ct, 'reactor_new', typ);
             
 %             if r.id < 0
 %                 error(geterr);
