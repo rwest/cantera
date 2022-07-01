@@ -1,3 +1,4 @@
+restoredefaultpath
 addpath(genpath('@ct_matlab_dir@/matlab_new'))
 setenv('PYTHON_CMD', '@python_cmd@')
 setenv('PYTHONPATH', [getenv('PYTHONPATH'), ':@python_module_loc_sc@'])

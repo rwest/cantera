@@ -1,0 +1,3 @@
+function cantera_root
+    cantera_root = '@prefix@';
+end

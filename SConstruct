@@ -136,9 +136,11 @@ if "clean" in COMMAND_LINE_TARGETS:
         remove_file(name)
     for name in Path("site_scons").glob("**/*.pyc"):
         remove_file(name)
-    remove_file("interfaces/MatlabToolbox/matlab_legacy/toolbox/cantera_shared.dll")
-    remove_file("interfaces/MatlabToolbox/matlab_legacy/Contents.m")
-    remove_file("interfaces/MatlabToolbox/matlab_legacy/ctpath.m")
+    remove_file("interfaces/MatlabToolbox/matlab_legacy/cantera_shared.dll")
+    remove_file("interfaces/MatlabToolbox/Contents.m")
+    remove_file("interfaces/MatlabToolbox/ctpath_new.m")
+    remove_file("interfaces/MatlabToolbox/ctpath_legacy.m")
+    remove_file("interfaces/MatlabToolbox/cantera_root.m")
     for name in Path("interfaces/MatlabToolbox/matlab_legacy/toolbox").glob("ctmethods.*"):
         remove_file(name)
 
