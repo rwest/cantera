@@ -20,7 +20,7 @@ classdef ReactorSurface < handle
             % Note: all of the arguments are optional and can be activated
             % after initial construction by using the various methods of
             % the 'ReactorSurface' class. 
-            % 
+            %
             % :parameter kleft:
             %    Surface reaction mechanisms for the left-facing surface.
             %    This must bean instance of class 'Kinetics', or of a class
@@ -108,6 +108,7 @@ classdef ReactorSurface < handle
         
         function setKinetics(s, kin)
             % Setthe surface reaction mechanism on a reactor surface.
+            %
             % :parameter kin:
             %    Instance of class 'Kinetics' (or another object derived
             %    from kin) to be used as the kinetic mechanism for this
@@ -120,7 +121,6 @@ classdef ReactorSurface < handle
             
             calllib(ct, 'reactorsurface_setkinetics', s.surfID, ikin);
         end
-        
     end
 end
 
