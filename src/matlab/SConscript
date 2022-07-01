@@ -102,7 +102,7 @@ localenv.Depends(new_target, env['install_python_action'])
 install('$inst_matlab_dir', new_target)
 
 # 'cantera_root.m'
-ct_root = localenv/SubstFiles('#interfaces/MatlabToolbox/cantera_root.m',
+ct_root = localenv/SubstFile('#interfaces/MatlabToolbox/cantera_root.m',
                               '#interfaces/MatlabToolbox/cantera_root.m.in')
 install('$inst_matlab_dir/matlab_new/Utility', ct_root)
 
