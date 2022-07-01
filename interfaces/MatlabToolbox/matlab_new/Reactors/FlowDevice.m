@@ -39,7 +39,7 @@ classdef FlowDevice < handle
             end
             
             x.type = typ;
-            x.id = calllib(ct, 'flowdev_new2', typ);
+            x.id = calllib(ct, 'flowdev_new', typ);
             x.upstream = -1;
             x.downstream = -1;
         end

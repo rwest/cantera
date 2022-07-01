@@ -74,7 +74,7 @@ classdef Wall < handle
             typ = 'Wall';
 
             x.type = char(typ);
-            x.id = calllib(ct, 'wall_new2', x.type);
+            x.id = calllib(ct, 'wall_new', x.type);
 %             if x.index < 0
 %                 error(geterr);
 %             end
