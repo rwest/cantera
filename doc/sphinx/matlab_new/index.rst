@@ -1,6 +1,6 @@
 .. _sec-matlab-documentation:
 
-Matlab Toolbox Documentation
+Matlab Toolbox (New) Documentation
 ==============================
 
 .. toctree::
