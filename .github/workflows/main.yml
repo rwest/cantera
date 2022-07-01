@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - testing
+      - matlab_toolbox_rebase
   pull_request:
     # Build when a pull request targets main
     branches:
