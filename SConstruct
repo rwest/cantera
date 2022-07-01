@@ -2097,7 +2097,6 @@ def postInstallMessage(target, source, env):
         env["matlab_toolbox_new_loc"] = pjoin(env["ct_matlab_dir"], "matlab_new")        
         env["matlab_sample_legacy_loc"] = pjoin(env["ct_sampledir"], "matlab_legacy")
         env["matlab_sample_new_loc"] = pjoin(env["ct_sampledir"], "matlab_new")
-        env["matlab_ctpath_loc"] = pjoin(env["ct_matlab_dir"], "ctpath.m")
         install_message.append(locations_message.format(
             name="Matlab toolbox (legacy)", location=env_dict["matlab_toolbox_legacy_loc"]
         ))
@@ -2105,15 +2104,15 @@ def postInstallMessage(target, source, env):
             name="Matlab toolbox (new)", location=env_dict["matlab_toolbox_new_loc"]
         ))
         install_message.append(locations_message.format(
-            name="Matlab samples (legacy)", location=env_dict["matlab_sample_legacy_loc"]
+            name="Matlab examples (legacy)", location=env_dict["matlab_sample_legacy_loc"]
         ))
         install_message.append(locations_message.format(
-            name="Matlab samples (new)", location=env_dict["matlab_sample_new_loc"]
+            name="Matlab examples (new)", location=env_dict["matlab_sample_new_loc"]
         ))
         install_message.append(textwrap.dedent("""
-            An m-file to set the correct matlab path for Cantera is at:
+            The m-files to set the correct matlab paths for new and legacy Cantera interfaces are at:
 
-              {matlab_ctpath_loc!s}
+              {ct_matlab_dir!s}
         """.format(**env_dict)))
 
     install_message = [

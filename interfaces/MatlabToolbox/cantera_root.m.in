@@ -1,3 +1,3 @@
-function cantera_root
-    cantera_root = '@prefix@';
+function output = cantera_root()
+    output = '@prefix@';
 end
