@@ -640,10 +640,6 @@ jobs:
     name: Run the MATLAB examples
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    strategy:
-      matrix:
-        python-version: ['3.7', '3.9', '3.10']
-      fail-fast: false
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
