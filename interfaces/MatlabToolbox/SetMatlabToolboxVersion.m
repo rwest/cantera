@@ -4,7 +4,12 @@ function SetMatlabToolboxVersion(ver)
     % :param ver:
     %    integer 0 - legacy 1- new OR
     %    string  'legacy'/'new';
-    path('ctpath.m');
+    
+    % Revert search path
+    restoredefaultpath;
+    path(pathdef, path);
+
+    % Add search paths for toolboxes
     if isa(ver, 'double')
         if ver == 0
             ctpath_legacy;

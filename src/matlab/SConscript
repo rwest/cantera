@@ -106,7 +106,7 @@ ctpath_target = localenv.SubstFile('#interfaces/MatlabToolbox/ctpath.m',
                                    '#interfaces/MatlabToolbox/ctpath.m.in')
 localenv.AddPreAction(new_target, copy_var)
 localenv.Depends(new_target, env['install_python_action'])
-install('$inst_matlab_dir', new_target)
+install('$inst_matlab_dir', ctpath_target)
 
 # 'cantera_root.m'
 ct_root = localenv.SubstFile('#interfaces/MatlabToolbox/cantera_root.m',
