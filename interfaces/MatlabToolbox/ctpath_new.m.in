@@ -1,4 +1,3 @@
-path('pathdef.m');
 addpath(genpath('@ct_matlab_dir@/matlab_new'));
 addpath('@ct_sampledir@/matlab_new');
 setenv('PYTHON_CMD', '@python_cmd@');

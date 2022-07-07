@@ -1,4 +1,3 @@
-path('pathdef.m');
 addpath('@ct_matlab_dir@/matlab_legacy');
 addpath('@ct_matlab_dir@/matlab_legacy/1D');
 addpath('@ct_sampledir@/matlab_legacy');
