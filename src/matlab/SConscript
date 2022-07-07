@@ -101,6 +101,13 @@ localenv.AddPreAction(new_target, copy_var)
 localenv.Depends(new_target, env['install_python_action'])
 install('$inst_matlab_dir', new_target)
 
+# 'ctpath.m'
+ctpath_target = localenv.SubstFile('#interfaces/MatlabToolbox/ctpath.m',
+                                   '#interfaces/MatlabToolbox/ctpath.m.in')
+localenv.AddPreAction(new_target, copy_var)
+localenv.Depends(new_target, env['install_python_action'])
+install('$inst_matlab_dir', new_target)
+
 # 'cantera_root.m'
 ct_root = localenv.SubstFile('#interfaces/MatlabToolbox/cantera_root.m',
                              '#interfaces/MatlabToolbox/cantera_root.m.in')
@@ -110,6 +117,10 @@ install('$inst_matlab_dir/matlab_new/Utility', ct_root)
 contents = localenv.SubstFile('#interfaces/MatlabToolbox/Contents.m',
                               '#interfaces/MatlabToolbox/Contents.m.in')
 install('$inst_matlab_dir', contents)
+
+# Install SetMatlabToolboxVersion and Readme.txt
+install('$inst_matlab_dir', '#interfaces/MatlabToolbox/SetMatlabToolboxVersion.m')
+install('$inst_matlab_dir', '#interfaces/MatlabToolbox/readme.txt')
 
 # Legacy toolbox
 install(localenv.RecursiveInstall, '$inst_matlab_dir/matlab_legacy',
