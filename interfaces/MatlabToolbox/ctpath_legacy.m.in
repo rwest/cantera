@@ -3,3 +3,4 @@ addpath('@ct_matlab_dir@/matlab_legacy/1D');
 addpath('@ct_sampledir@/matlab_legacy');
 setenv('PYTHON_CMD', '@python_cmd@');
 setenv('PYTHONPATH', [getenv('PYTHONPATH'), ':@python_module_loc_sc@']);
+disp('Cantera Matlab Toolbox Has Been Set To The Legacy Version');
