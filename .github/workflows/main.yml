@@ -24,6 +24,9 @@ jobs:
     name: Run the MATLAB examples
     runs-on: ubuntu-18.04
     timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash -l {0}
     strategy:
       matrix:
         matlab-version: [ 'R2020a', 'R2021a' ]
