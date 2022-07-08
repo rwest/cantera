@@ -47,17 +47,17 @@ jobs:
         with:
           release: R2021a
       - name: Build Cantera
-        run: python3 `which scons` build env_vars=all -j2 debug=n --debug=time -matlab_path='/usr/local/MATLAB/2021a/'
+        run: python3 `which scons` build env_vars=all -j2 debug=n matlab_path='/usr/local/MATLAB/R2021a/' --debug=time
       - name: Install
         # spot-check installation locations
         run: |
           scons install
           test -f ${CONDA_PREFIX}/lib/libcantera_shared.so
-          test -f ${CONDA_PREFIX}/matlab/MatlabToolbox/ctpath_new.m
+          test -f ${CONDA_PREFIX}/matlab/MatlabToolbox/ctpath.m
       - name: Run MATLAB script
         uses: matlab-actions/run-command@v1
         with:
-          command: ctpath_new 
+          command: addpath('${CONDA_PREFIX}/matlab/MatlabToolbox/'), ctpath, SetMatlabToolboxVersion(1), LoadCantera
 
 
   ubuntu-multiple-pythons:
