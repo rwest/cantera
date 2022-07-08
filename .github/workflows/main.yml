@@ -9,7 +9,7 @@ on:
     branches:
       - main
       - testing
-      - matlab_toolbox_rebase
+      - matlab_toolbox_rebase # temporary
   pull_request:
     # Build when a pull request targets main
     branches:
@@ -25,6 +25,13 @@ jobs:
     name: Run the MATLAB examples
     runs-on: ubuntu-18.04
     timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      matrix:
+        matlab-version: [ 'R2020a', 'R2021a' ]
+      fail-fast: false
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -46,19 +53,19 @@ jobs:
       - name: Set up MATLAB
         uses: matlab-actions/setup-matlab@v1
         with:
-          release: 2021a
-      - name: Build Cantera
-        run: python3 `which scons` build env_vars=all -j2 debug=n --debug=time -matlab_path='/usr/local/MATLAB/2021a/'
+          release: ${{ matrix.matlab-version }}
+      - name: Build Cantera # compile with GCC 5.5.0 on ubuntu-18.04
+        run: python3 `which scons` build env_vars=all -j2 debug=n matlab_path='/usr/local/MATLAB/${{ matrix.matlab-version }}/' --debug=time
       - name: Install
         # spot-check installation locations
         run: |
-          scons install
+          sudo scons install
           test -f ${CONDA_PREFIX}/lib/libcantera_shared.so
-          test -f ${CONDA_PREFIX}/matlab/MatlabToolbox/ctpath_new.m
+          test -f ${CONDA_PREFIX}/matlab/MatlabToolbox/ctpath.m
       - name: Run MATLAB script
         uses: matlab-actions/run-command@v1
         with:
-          command: ctpath_new 
+          command: addpath('${CONDA_PREFIX}/matlab/MatlabToolbox/'), ctpath, SetMatlabToolboxVersion(1), LoadCantera
 
 
   ubuntu-multiple-pythons:
