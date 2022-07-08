@@ -45,7 +45,7 @@ jobs:
       - name: Set up MATLAB
         uses: matlab-actions/setup-matlab@v1
         with:
-          release: 2020a
+          release: R2021a
       - name: Build Cantera
         run: python3 `which scons` build env_vars=all -j2 debug=n --debug=time -matlab_path='/usr/local/MATLAB/2021a/'
       - name: Install
