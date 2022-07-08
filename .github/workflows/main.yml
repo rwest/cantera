@@ -24,6 +24,10 @@ jobs:
     name: Run the MATLAB examples
     runs-on: ubuntu-18.04
     timeout-minutes: 60
+    strategy:
+      matrix:
+        matlab-version: [ 'R2020a', 'R2021a' ]
+      fail-fast: false
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -45,9 +49,9 @@ jobs:
       - name: Set up MATLAB
         uses: matlab-actions/setup-matlab@v1
         with:
-          release: R2021a
-      - name: Build Cantera
-        run: python3 `which scons` build env_vars=all -j2 debug=n matlab_path='/usr/local/MATLAB/R2021a/' --debug=time
+          release: ${{ matrix.matlab-version }}
+      - name: Build Cantera # compile with GCC 5.5.0 on ubuntu-18.04
+        run: python3 `which scons` build env_vars=all -j2 debug=n matlab_path='/usr/local/MATLAB/${{ matrix.matlab-version }}/' --debug=time
       - name: Install
         # spot-check installation locations
         run: |
