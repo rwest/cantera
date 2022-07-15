@@ -1,0 +1,2 @@
+addpath('@ct_matlab_dir@');
+savepath('@ct_matlab_dir@/ct_path.m');

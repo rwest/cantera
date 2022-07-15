@@ -50,7 +50,7 @@ autodoc_default_options = {
     'undoc-members': True,
 }
 
-matlab_src_dir = os.path.abspath('../../interfaces/MatlabToolbox/matlab_new')
+matlab_src_dir = os.path.abspath('../../interfaces/matlab')
 
 def setup(app):
     """Set up an event handler to escape splat characters (*) in docstrings
