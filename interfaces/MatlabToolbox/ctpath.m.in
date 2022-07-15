@@ -1,2 +1,0 @@
-addpath('@ct_matlab_dir@');
-savepath('@ct_matlab_dir@/pathdef.m');
