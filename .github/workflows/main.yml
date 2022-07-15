@@ -58,7 +58,7 @@ jobs:
       - name: Install
         # spot-check installation locations
         run: |
-          scons install
+          sudo scons install
           test -f ${CONDA_PREFIX}/lib/libcantera_shared.so
           test -f ${CONDA_PREFIX}/matlab/MatlabToolbox/ctpath.m
       - name: Run MATLAB script
