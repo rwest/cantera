@@ -319,8 +319,11 @@ if localenv['python_package'] == 'full':
         env['testNames'].append(name)
 
 if localenv['matlab_toolbox'] == 'y':
+    matlabTest_legacy = addMatlabTest('runCanteraTests.m', 'matlab_legacy',
+                                      dependencies=multi_glob(localenv, 'matlab', 'm'))
     matlabTest = addMatlabTest('runCanteraTests.m', 'matlab',
-                               dependencies=multi_glob(localenv, 'matlab', 'm'))
+                               dependencies=multi_glob(localenv, 'matlab', 'm'))                                      
+    localenv.Alias('test-matlab-legacy', matlabTest_legacy)
     localenv.Alias('test-matlab', matlabTest)
     env['testNames'].append('matlab')
 
