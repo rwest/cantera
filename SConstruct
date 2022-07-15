@@ -138,7 +138,7 @@ if "clean" in COMMAND_LINE_TARGETS:
         remove_file(name)
     remove_file("interfaces/matlab_legacy/cantera_shared.dll")
     remove_file("interfaces/Contents.m")
-    remove file("interfaces/ctpath.m")
+    remove_file("interfaces/ctpath.m")
     remove_file("interfaces/ctpath_new.m")
     remove_file("interfaces/ctpath_legacy.m")
     remove_file("interfaces/cantera_root.m")
@@ -1768,7 +1768,7 @@ if env['layout'] == 'compact':
     env['ct_mandir'] = pjoin(env['prefix'], 'man1')
     env['ct_matlab_dir'] = pjoin(env['prefix'], 'MatlabToolbox')   
     env['ct_matlab_legacy_dir'] = pjoin(env['prefix'], 'MatlabToolbox_Legacy')
-    env['ct_matlab_util_dir'] = pjoin(env['prefix', 'MatlabUtil'])
+    env['ct_matlab_util_dir'] = pjoin(env['prefix'], 'MatlabUtil')
 else:
     env['ct_datadir'] = pjoin(env['prefix'], 'share', 'cantera', 'data')
     env['ct_sampledir'] = pjoin(env['prefix'], 'share', 'cantera', 'samples')
