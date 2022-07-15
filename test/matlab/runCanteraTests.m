@@ -12,8 +12,9 @@ else
     runtests('-verbose','-logfile',varargin{1})
 end
 
-% unload the MEX file
-clear ctmethods
+% unload the Cantera Clib
+cleanup
+UnloadCantera
 
 % delete global objects created by some of the test
 clear global static*

@@ -24,7 +24,7 @@ for i = 1:length(dirs)
 end
 
 % Add the Cantera toolbox to the Matlab path
-path(path, genpath(fullfile(pwd, '..'));
+path(path, genpath(fullfile(pwd, '..')));
 cantera_root = fullfile(pwd, '..', '..', '..');
 
 % Set path to Python module
