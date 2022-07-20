@@ -6,7 +6,7 @@ Installation guide:
 2) Compile Cantera from Source and install in your Python environment, as directed in this link. 
 https://cantera.org/install/compiling-install.html. Be sure to set `matlab_path` option in Scons.
 3) Both the new and legacy versions of the Matlab toolbox will be installed. However, only one can be used at a time. Activating both will result in a conflict in Matlab. 
-4) For first time users, launch Matlab, then navigate to [/path/to/cantera/installation/matlab/MatlabToolbox] using "Browse for Folder".
+4) For first time users, launch Matlab, then navigate to [/path/to/cantera/installation/matlab] using "Browse for Folder".
 5) Run the 'ctpath.m' script to save current search path to a temporary file called 'pathdef.m'. 
 6) The user can set the desired toolbox version by running the 'SetMatlabToolboxVersion' command. Input can be 'legacy' or 'new'.
 7) The user must restart Matlab after switching between the new and legacy interfaces. 

@@ -171,7 +171,7 @@ if localenv['sphinx_docs']:
         doc = ''
 
         # The base directory of the MATLAB toolbox relative to the sphinx build directory
-        base = '../interfaces/MatlabToolbox/matlab_legacy/toolbox'
+        base = '../interfaces/matlab_legacy'
         for obj in page.objects:
             all_files = []
             # Set the subheader based on the class name
