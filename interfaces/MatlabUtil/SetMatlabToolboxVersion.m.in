@@ -7,19 +7,23 @@ function SetMatlabToolboxVersion(ver)
     % Add search paths for toolboxes
     if isa(ver, 'char')
         if strcmp(ver, 'legacy')
-            rmpath(genpath('@ct_matlab_dir@/matlab_new'));
+            warning('off');
+            rmpath(genpath('@ct_matlab_new_dir@'));
             rmpath('@ct_sampledir@/matlab_new');
-            addpath('@ct_matlab_dir@/matlab_legacy');
-            addpath('@ct_matlab_dir@/matlab_legacy/1D');
+            addpath('@ct_matlab_legacy_dir@');
+            addpath('@ct_matlab_legacy_dir@/1D');
             addpath('@ct_sampledir@/matlab_legacy');
+            savepath;
             disp('Cantera Matlab Toolbox Has Been Set To The Legacy Version');
         elseif strcmp(ver, 'new')
-            addpath(genpath('@ct_matlab_dir@/matlab_new'));
+            warning('off');
+            addpath(genpath('@ct_matlab_new_dir@'));
             addpath('@ct_sampledir@/matlab_new');
-            rmpath('@ct_matlab_dir@/matlab_legacy');
-            rmpath('@ct_matlab_dir@/matlab_legacy/1D');
+            rmpath('@ct_matlab_legacy_dir@');
+            rmpath('@ct_matlab_legacy_dir@/1D');
             rmpath('@ct_sampledir@/matlab_legacy');
-            disp('Cantera Matlab Toolbox Has Been Set To The Legacy Version');
+            savepath;
+            disp('Cantera Matlab Toolbox Has Been Set To The New Version');
         else
             error('Interface version must be "legacy" or "new"');
         end

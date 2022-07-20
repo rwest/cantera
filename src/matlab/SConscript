@@ -63,7 +63,7 @@ localenv.Append(CPPDEFINES=['MATLAB_MEX_FILE'],
 linklibs += localenv['sundials_libs']
 linklibs += localenv['blas_lapack_libs']
 
-ctmethods = build(localenv.SharedLibrary('#interfaces/matlab_legacy/toolbox/ctmethods',
+ctmethods = build(localenv.SharedLibrary('#interfaces/matlab_legacy/ctmethods',
                                          multi_glob(localenv, '.', 'cpp'),
                                          LIBPREFIX='',
                                          SHLIBPREFIX='',
@@ -104,18 +104,18 @@ install('$inst_matlab_dir', contents)
 
 # Install SetMatlabToolboxVersion
 ct_version = localenv.SubstFile('#interfaces/MatlabUtil/SetMatlabToolboxVersion.m',
-                             '#interfaces/MatlabUtil/SetMatlabToolboxVersion.m.in')
+                                '#interfaces/MatlabUtil/SetMatlabToolboxVersion.m.in')
 install('$inst_matlab_dir', ct_version)
 
 # Legacy toolbox
 install(localenv.RecursiveInstall, '$inst_matlab_legacy_dir',
-        '#interfaces/matlab_legacy/toolbox',
+        '#interfaces/matlab_legacy/',
         exclude=['dll$', 'exp$', 'lib$', 'ilk$', 'manifest$'])
 install(localenv.RecursiveInstall, '$inst_sampledir/matlab_legacy', '#samples/matlab_legacy')
 
 # New Toolbox
 install(localenv.RecursiveInstall, '$inst_matlab_new_dir',
-        '#interfaces/matlab',
+        '#interfaces/matlab/',
         exclude=['dll$', 'exp$', 'lib$', 'ilk$', 'manifest$'])
 install(localenv.RecursiveInstall, '$inst_sampledir/matlab', '#samples/matlab')
 
