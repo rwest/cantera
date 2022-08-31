@@ -2,9 +2,10 @@ function SetMatlabToolboxVersion(ver)
     % Sets the version of the Cantera Matlab Interface
     %
     % :param ver:
-    %    string  'legacy'/'new';
+    %    string  'legacy'/'new'/'uninstall'
+    %
 
-    % Add search paths for toolboxes
+    % Modify search paths for toolboxes
     if isa(ver, 'char')
         if strcmp(ver, 'legacy')
             warning('off');
@@ -24,8 +25,17 @@ function SetMatlabToolboxVersion(ver)
             rmpath('@ct_sampledir@/matlab_legacy');
             savepath;
             disp('Cantera Matlab Toolbox Has Been Set To The New Version');
+        elseif strcmp(ver, 'uninstall')
+            warning('off');
+            rmpath(genpath('@ct_matlab_new_dir@'));
+            rmpath('@ct_sampledir@/matlab');
+            rmpath('@ct_matlab_legacy_dir@');
+            rmpath('@ct_matlab_legacy_dir@/1D');
+            rmpath('@ct_sampledir@/matlab_legacy');
+            savepath;
+            disp('Cantera Matlab Toolbox Has Been Removed From the Search Path');
         else
-            error('Interface version must be "legacy" or "new"');
+            error('Interface version must be "legacy"/"new"/"uninstall"');
         end
     else
         error('Invalid input');

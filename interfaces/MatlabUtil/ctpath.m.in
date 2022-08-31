@@ -1,2 +1,19 @@
-addpath('@ct_matlab_dir@');
-savepath;
+function ctpath(action)
+    % CTPATH
+    % Set the search path for Matlab to access utility functions for
+    % Cantera Matlab Toolbox. 
+    %
+    % :param action:
+    %    string  'install' or 'uninstall'
+
+    if strcmp(action, 'install')
+        addpath('@ct_matlab_dir@');
+        savepath;
+    elseif strcmp(action, 'uninstall')
+        SetMatlabToolboxVersion('uninstall');
+        rmpath('@ct_matlab_dir@');
+        savepath;
+    else
+        error('Please specify an action');
+    end
+end
