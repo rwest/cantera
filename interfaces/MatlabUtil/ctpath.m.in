@@ -9,6 +9,7 @@ function ctpath(action)
     if strcmp(action, 'install')
         addpath('@ct_matlab_dir@');
         savepath;
+        disp('Search path added');
     elseif strcmp(action, 'uninstall')
         SetMatlabToolboxVersion('uninstall');
         rmpath('@ct_matlab_dir@');
