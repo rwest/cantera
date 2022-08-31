@@ -9,7 +9,7 @@ function SetMatlabToolboxVersion(ver)
         if strcmp(ver, 'legacy')
             warning('off');
             rmpath(genpath('@ct_matlab_new_dir@'));
-            rmpath('@ct_sampledir@/matlab_new');
+            rmpath('@ct_sampledir@/matlab');
             addpath('@ct_matlab_legacy_dir@');
             addpath('@ct_matlab_legacy_dir@/1D');
             addpath('@ct_sampledir@/matlab_legacy');
@@ -18,7 +18,7 @@ function SetMatlabToolboxVersion(ver)
         elseif strcmp(ver, 'new')
             warning('off');
             addpath(genpath('@ct_matlab_new_dir@'));
-            addpath('@ct_sampledir@/matlab_new');
+            addpath('@ct_sampledir@/matlab');
             rmpath('@ct_matlab_legacy_dir@');
             rmpath('@ct_matlab_legacy_dir@/1D');
             rmpath('@ct_sampledir@/matlab_legacy');

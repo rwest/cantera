@@ -38,7 +38,7 @@ function gas = GRI30(tr)
         elseif strcmp(tr, 'Mix')
             gas = Solution('gri30.yaml', 'gri30', 'Mix');
         elseif strcmp(tr, 'Multi')
-            gas = Solution('gri30.yaml', 'gri30', 'Multi')
+            gas = Solution('gri30.yaml', 'gri30', 'Multi');
         else
             error('Unknown transport specified. "None", "Mix", or "Multi" are supported.')
         end

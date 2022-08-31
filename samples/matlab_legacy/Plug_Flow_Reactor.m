@@ -19,13 +19,18 @@
 %    Research Assistant/Assistant Professor
 %    Advanced Propulsion and Power Laboratory
 %    Virginia Tech
-%
-% Keywords: combustion, user-defined model, compressible flow, plotting
 
 %% Clear all variables, close all figures, clear the command line:
+
 clear all
 close all
+cleanup
 clc
+
+tic
+help PFR
+
+%% Operation Parameters
 
 % Temperature of gas, in K
 T0 = 1473;
@@ -36,11 +41,11 @@ P0 = 4.47*101325;
 Phi = 0.2899;
 
 % Import the gas phase, read out key species indices:
-gas_calc = Solution('gri30.yaml');
-ich4 = speciesIndex(gas_calc,'CH4');
-io2  = speciesIndex(gas_calc,'O2');
-in2  = speciesIndex(gas_calc,'N2');
-nsp = nSpecies(gas_calc);
+gas_calc = Solution('gri30.yaml', 'gri30');
+ich4 = gas_calc.speciesIndex('CH4');
+io2  = gas_calc.speciesIndex('O2');
+in2  = gas_calc.speciesIndex('N2');
+nsp = gas_calc.nSpecies;
 x = zeros(nsp,1);
 
 % Change the below values for different Phi values of methane Combustion
@@ -49,10 +54,11 @@ x(io2,1) = 2.0;
 x(in2,1) = 7.52;
 
 % Set the initial state and then equilibrate for a given enthalpy and pressure:
-set(gas_calc,'T',T0,'P',P0,'MoleFractions',x);
-gas_calc = equilibrate(gas_calc,'HP');
+gas_calc.TPX = {T0, P0, x};
+gas_calc.equilibrate('HP');
 
 %% Calculation of properties along the reactor length
+
 % The Dimensions and conditions of the reactor are given below
 
 % Inlet Area, in m^2
@@ -70,9 +76,9 @@ mdot_calc = 1.125;
 % k = -1 makes the solver solve for converging area.
 % k = +1 makes the solver solve for diverging area.
 % k = 0 makes the solver solve for constant cross sectional area
-if A_in>A_out
+if A_in > A_out
     k = -1;
-elseif A_out>A_in
+elseif A_out > A_in
     k = 1;
 else
     k = 0;
@@ -83,16 +89,16 @@ dAdx = abs(A_in-A_out)/L;
 dx = L/n;
 
 x_calc = 0:dx:L;
-nsp = nSpecies(gas_calc);
+nsp = gas_calc.nSpecies;
 
 % Initialize arrays for T, Y, and rho at each location:
-T_calc = zeros(length(x_calc),1);
-Y_calc = zeros(length(x_calc),nsp);
-rho_calc = zeros(length(x_calc),1);
+T_calc = zeros(length(x_calc), 1);
+Y_calc = zeros(length(x_calc), nsp);
+rho_calc = zeros(length(x_calc), 1);
 
-T_calc(1) = temperature(gas_calc);
-Y_calc(1,:) = massFractions(gas_calc);
-rho_calc(1) = density(gas_calc);
+T_calc(1) = gas_calc.T;
+Y_calc(1,:) = gas_calc.Y;
+rho_calc(1) = gas_calc.D;
 
 for i = 2:length(x_calc)
 
@@ -106,60 +112,64 @@ for i = 2:length(x_calc)
 %--------------------------------------------------------------------------
     inlet_soln(1) = rho_calc(i-1);
     inlet_soln(2) = T_calc(i-1);
-    inlet_soln(3:nsp+2) = Y_calc(i-1,:);
-    limits = [x_calc(i-1),x_calc(i)];
-    set(gas_calc,'T',T_calc(i-1),'Density',rho_calc(i-1),'MoleFractions',Y_calc(i-1,:));
-    options = odeset('RelTol',1.e-10,'AbsTol',1e-10,'InitialStep',1e-8,'NonNegative',1);
+    inlet_soln(3:nsp+2) = Y_calc(i-1, :);
+    limits = [x_calc(i-1), x_calc(i)];
+    gas_calc.TDY = {T_calc(i-1), rho_calc(i-1), Y_calc(i-1, :)};
+    options = odeset('RelTol', 1.e-10, 'AbsTol', 1e-10,...
+                     'InitialStep', 1e-8, 'NonNegative', 1);
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
     % These values are passed onto the ode15s solver
-    [~,y] = ode15s(@PFR_solver,limits,inlet_soln,options,gas_calc,mdot_calc,A_in,dAdx,k);
+    [~,y] = ode15s(@PFR_Solver, limits, inlet_soln, options, ...
+                    gas_calc, mdot_calc, A_in, dAdx, k);
 
-    T_calc(i) = y(end,2);
-    rho_calc(i) = y(end,1);
-    Y_calc(i,:) = y(end,3:nsp+2);
+    T_calc(i) = y(end, 2);
+    rho_calc(i) = y(end, 1);
+    Y_calc(i,:) = y(end, 3:nsp+2);
 end
 
-A_calc = A_in+k.*x_calc*dAdx;
-vx_calc = zeros(length(x_calc),1);
-R_calc = zeros(length(x_calc),1);
-M_calc = zeros(length(x_calc),1);
-P_calc = zeros(length(x_calc),1);
+A_calc = A_in + k.* x_calc * dAdx;
+vx_calc = zeros(length(x_calc), 1);
+R_calc = zeros(length(x_calc), 1);
+M_calc = zeros(length(x_calc), 1);
+P_calc = zeros(length(x_calc), 1);
 for i=1:length(x_calc)
     % The gas is set to the solved property values at each location
-    set(gas_calc,'Temperature',T_calc(i),'Density',rho_calc(i),'MassFractions',Y_calc(i,:));
+    gas.TDY = {T_calc(i), rho_calc(i), Y_calc(i, :)};
     % Velocity is calculated from Mass flow rate, Area and Density
-    vx_calc(i) = mdot_calc./(A_calc(i)*rho_calc(i));
+    vx_calc(i) = mdot_calc./ (A_calc(i) * rho_calc(i));
     % Specific Gas Constant
-    R_calc(i) = gasconstant()/meanMolecularWeight(gas_calc);
+    R_calc(i) = gasconstant() / gas_calc.meanMolecularWeight;
     % Mach No. is calculated from local velocity and local speed of sound
-    M_calc(i) = vx_calc(i)/soundspeed(gas_calc);
-    % Pressure is calculated from density, temeprature and gas constant
-    P_calc(i) = rho_calc(i)*R_calc(i)*T_calc(i);
+    M_calc(i) = vx_calc(i) / gas_calc.soundspeed;
+    % Pressure is calculated from density, temperature and gas constant
+    P_calc(i) = rho_calc(i) * R_calc(i) * T_calc(i);
 end
 
 %% Plotting
-plot(x_calc,M_calc)
+plot(x_calc, M_calc)
 xlabel('X-Position (m)')
 ylabel('Mach No')
 title('Mach No. Variation')
 figure(2)
-plot(x_calc,A_calc)
+plot(x_calc, A_calc)
 xlabel('X-Position (m)')
 ylabel('Area (m^2)')
 title('Reactor Profile')
 figure(3)
-plot(x_calc,T_calc)
+plot(x_calc, T_calc)
 xlabel('X-Position (m)')
 ylabel('Temperature')
 title('Temperature Variation')
 figure(4)
-plot(x_calc,rho_calc)
+plot(x_calc, rho_calc)
 xlabel('X-Position (m)')
 ylabel('Density (kg/m^3)')
 title('Density Variation')
 figure(5)
-plot(x_calc,P_calc)
+plot(x_calc, P_calc)
 xlabel('X-Position (m)')
 ylabel('Pressure (Pa)')
 title('Pressure Variation')
+
+toc

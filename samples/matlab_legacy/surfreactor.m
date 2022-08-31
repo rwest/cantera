@@ -3,40 +3,47 @@
 %    This example illustrates how to use class 'Reactor' for
 %    zero-dimensional simulations including both homogeneous and
 %    heterogeneous chemistry.
-%
-% Keywords: catalysis, combustion, reactor network, plotting
 
+%% Initialization
+
+clear all
+close all
+cleanup
+clc
+
+tic
 help surfreactor
+
+%% Set the initial conditions
 
 t = 870.0;
 gas = Solution('ptcombust.yaml','gas');
 
-% set the initial conditions
-set(gas,'T',t,'P',oneatm,'X','CH4:0.01, O2:0.21, N2:0.78');
+gas.TPX = {t, oneatm, 'CH4:0.01, O2:0.21, N2:0.78'};
 
 % The surface reaction mechanism describes catalytic combustion of
-% methane on platinum, and is from Deutschmann et al., 26th
+% methane on platinum, and is from Deutschman et al., 26th
 % Symp. (Intl.) on Combustion,1996, pp. 1747-1754
 surf = importInterface('ptcombust.yaml','Pt_surf', gas);
-setTemperature(surf, t);
+surf.T = t;
 
-nsp = nSpecies(gas);
-nSurfSp = nSpecies(surf);
+nsp = gas.nSpecies;
+nSurfSp = surf.nSpecies;
 
 % create a reactor, and insert the gas
 r = IdealGasReactor(gas);
-setInitialVolume(r, 1.0e-6)
+r.setInitialVolume(1.0e-6)
 
 % create a reservoir to represent the environment
 a = Solution('air.yaml','air','None');
-set(a,'T',t,'P',oneatm);
+a.TP = {t, oneatm};
 env = Reservoir(a);
 
 % Define a wall between the reactor and the environment and
 % make it flexible, so that the pressure in the reactor is held
 % at the environment pressure.
 w = Wall;
-install(w,r,env);
+w.install(r, env);
 
 A = 1e-4; % Wall area
 
@@ -44,36 +51,38 @@ A = 1e-4; % Wall area
 rsurf = ReactorSurface(surf, r, A);
 
 % set the wall area and heat transfer coefficient.
-setArea(w, A);
-setHeatTransferCoeff(w,1.0e1);  % W/m2/K
+w.area = A;
+w.setHeatTransferCoeff(1.0e1);  % W/m2/K
 
 % set expansion rate parameter. dV/dt = KA(P_1 - P_2)
-setExpansionRateCoeff(w, 1.0);
+w.setExpansionRateCoeff(1.0);
 
 network = ReactorNet({r});
 % setTolerances(network, 1.0e-8, 1.0e-12);
 
 nSteps = 100;
-p0 = pressure(r);
+p0 = r.P;
 names = {'CH4','CO','CO2','H2O'};
 x = zeros([nSteps 4]);
-tim = zeros(nSteps);
-temp = zeros(nSteps);
-pres = zeros(nSteps);
+tim = zeros(nSteps, 1);
+temp = zeros(nSteps, 1);
+pres = zeros(nSteps, 1);
 cov = zeros([nSteps nSurfSp]);
 t = 0;
 dt = 0.1;
 t0 = cputime;
 for n = 1:nSteps
   t = t + dt;
-  advance(network, t);
+  network.advance(t);
   tim(n) = t;
-  temp(n) = temperature(r);
-  pres(n) = pressure(r) - p0;
-  cov(n,:) = coverages(surf)';
-  x(n,:) = moleFraction(gas,names);
+  temp(n) = r.T;
+  pres(n) = r.P - p0;
+  cov(n,:) = surf.X';
+  x(n,:) = gas.moleFraction(names);
 end
 disp(['CPU time = ' num2str(cputime - t0)]);
+
+%% Plotting
 
 clf;
 subplot(2,2,1);
@@ -97,3 +106,5 @@ ylabel('Mole Fractions');
 legend(names);
 clear all
 cleanup
+
+toc
