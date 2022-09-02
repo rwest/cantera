@@ -27,12 +27,9 @@ t0 = cputime; % record the starting time
 %% Operation Parameters
 
 t = 1200.0;                     % surface temperature
-p = 20.0 * oneatm;              % pressure
+p = 20.0 * oneatm / 760.0;              % pressure
 
 %% Create the gas object
-%
-% This object will be used to evaluate all thermodynamic, kinetic,
-% and transport properties
 %
 % The gas phase will be taken from the definition of phase 'gas' in
 % input file 'diamond.yaml'.
@@ -41,6 +38,57 @@ gas = Solution('diamond.yaml', 'gas');
 gas.TP = {t, p};
 x = gas.X;
 ih = gas.speciesIndex('H');
+xh0 = x(ih);
+
+%% Create the bulk diamond object
+%
+% The bulk phase will be taken from the definition of phase 'diamond' in
+% input file 'diamond.yaml'.
+
+dbulk = Solution('diamond.yaml', 'diamond');
+mw = dbulk.MolecularWeights;
 
 %% Create the interface object
+%
+% This object will be used to evaluate all surface chemical production
+% rates. It will be created from the interface definition 'diamond_100'
+% in input file 'diamond.yaml'.
 
+surf_phase = importInterface('diamond.yaml', 'diamond_100', gas, dbulk);
+
+%% Advance Coverages
+
+iC = surf_phase.kineticsSpeciesIndex('C(d)', 'diamond');
+
+xx = [];
+rr = [];
+cov = [];
+
+for i = 1:20
+    x(ih) = x(ih) / 1.4;
+    gas.TPX = {t, p, x};
+    surf_phase.advanceCoverages(10.0);
+    r = surf_phase.netProdRates;
+    carbon_dot = r(iC + 1);
+    mdot = mw * carbon_dot;
+    rate = mdot / dbulk.D;
+    xx = [xx; x(ih)];
+    rr = [rr; rate * 1.0e6 * 3600.0];
+    cov = [cov; surf_phase.coverages];
+end
+
+%% Make Plots
+
+clf;
+
+subplot(1, 2, 1);
+plot(xx, rr);
+xlabel('H Mole Fraction');
+ylabel('Growth Rate (microns/hr)');
+title('Growth Rate');
+
+subplot(1, 2, 2);
+plot(xx, cov);
+xlabel('H Mole Fraction');
+ylabel('Coverage');
+title('Coverages');
