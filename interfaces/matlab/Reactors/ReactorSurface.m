@@ -38,7 +38,7 @@ classdef ReactorSurface < handle
             
             s.surfID = callct('reactorsurface_new', 0);
             s.reactor = -1;
-            if s.id < 0
+            if s.surfID < 0
                 error(geterr);
             end
            

@@ -1,5 +1,3 @@
-% LITHIUM_ION_BATTERY
-%
 % This example file calculates the cell voltage of a lithium-ion battery
 % at given temperature, pressure, current, and range of state of charge (SOC).
 %
@@ -18,26 +16,20 @@
 % of the thermodynamics of lithium-ion battery intercalation materials in the
 % open-source software Cantera,” Electrochim. Acta 323, 134797 (2019),
 % https://doi.org/10.1016/j.electacta.2019.134797
+%
+% Keywords: surface chemistry, kinetics, electrochemistry, battery, plotting
 
-%% Initialization
+% -----------------------------------------------------------------------------
+% Input
+% -----------------------------------------------------------------------------
 
-clear all
-close all
-cleanup
-clc
-
-tic
-help lithium_ion_battery
-
-%% Operation parameters
-
+% Operation parameters
 SOC = 0:0.02:1; % [-] Input state of charge (0...1) (can be a vector)
 I_app = -1; % [A] Externally-applied current, negative for discharge
 T = 293; % [K] Temperature
 P = oneatm; % [Pa] Pressure
 
-%% Cell properties
-
+% Cell properties
 inputFile = 'lithium_ion_battery.yaml'; % Cantera input file name
 R_elyt = 0.0384; % [Ohm] Electrolyte resistance
 S_ca = 1.1167; % [m^2] Cathode total active material surface area
@@ -51,7 +43,9 @@ X_Li_an_1 = 0.75; % [-] anode Li mole fraction at SOC = 100 %
 X_Li_ca_0 = 0.99; % [-] cathode Li mole fraction at SOC = 0 %
 X_Li_ca_1 = 0.49; % [-] cathode Li mole fraction at SOC = 100 %
 
-%% Calculations
+% -----------------------------------------------------------------------------
+% Calculations
+% -----------------------------------------------------------------------------
 
 % Calculate mole fractions from SOC
 X_Li_an = (X_Li_an_1-X_Li_an_0)*SOC+X_Li_an_0; % anode balancing
@@ -66,12 +60,12 @@ anode_interface = Interface(inputFile, 'edge_anode_electrolyte', anode, elde, el
 cathode_interface = Interface(inputFile, 'edge_cathode_electrolyte', cathode, elde, elyt);
 
 % Set the temperatures and pressures of all phases
-anode.TP = {T, P};
-cathode.TP = {T, P};
-elde.TP = {T, P};
-elyt.TP = {T, P};
-anode_interface.TP = {T, P};
-cathode_interface.TP = {T, P};
+set(anode,'T',T,'P',P);
+set(cathode,'T',T,'P',P);
+set(elde,'T',T,'P',P);
+set(elyt,'T',T,'P',P);
+set(anode_interface,'T',T,'P',P);
+set(cathode_interface,'T',T,'P',P);
 
 % Calculate cell voltage, separately for each entry of the input vectors
 V_cell = zeros(length(SOC),1);
@@ -82,16 +76,13 @@ for i = 1:length(SOC)
     phi_s_an = 0;
 
     % Calculate anode electrolyte potential
-    phi_l_an = fzero(@(E) anode_curr(phi_s_an, E, X_Li_an(i), anode, elde,...
-                                     elyt, anode_interface, S_an) - I_app, phi_l_an);
+    phi_l_an = fzero(@(E) anode_curr(phi_s_an,E,X_Li_an(i),anode,elde,elyt,anode_interface,S_an)-I_app, phi_l_an);
 
     % Calculate cathode electrolyte potential
     phi_l_ca = phi_l_an + I_app*R_elyt;
 
     % Calculate cathode electrode potential
-    phi_s_ca = fzero(@(E) cathode_curr(E, phi_l_ca, X_Li_ca(i), ...
-                                       cathode, elde, elyt, cathode_interface,...
-                                       S_ca) - I_app, phi_s_ca);
+    phi_s_ca = fzero(@(E) cathode_curr(E,phi_l_ca,X_Li_ca(i),cathode,elde,elyt,cathode_interface,S_ca)-I_app, phi_s_ca);
 
     % Calculate cell voltage
     V_cell(i) = phi_s_ca - phi_s_an;
@@ -99,45 +90,46 @@ end
 
 % Let's plot the cell voltage, as a function of the state of charge:
 figure(1);
-plot(SOC*100, V_cell, 'linewidth', 2.5)
-ylim([2.5, 4.3])
+plot(SOC*100,V_cell,'linewidth',2.5)
+ylim([2.5,4.3])
 xlabel('State of charge / %')
 ylabel('Cell voltage / V')
-set(gca, 'fontsize', 14)
+set(gca,'fontsize',14)
 
-toc
 
-%% Helper functions
+%--------------------------------------------------------------------------
+% Helper functions
+% -----------------------------------------------------------------------------
 
 % This function returns the Cantera calculated anode current (in A)
-function anCurr = anode_curr(phi_s, phi_l, X_Li_an, anode, elde, elyt, anode_interface, S_an)
+function anCurr = anode_curr(phi_s,phi_l,X_Li_an,anode,elde,elyt,anode_interface,S_an)
     % Set the active material mole fraction
-    anode.X = ['Li[anode]:' num2str(X_Li_an) ', V[anode]:' num2str(1-X_Li_an)];
+    set(anode,'X',['Li[anode]:' num2str(X_Li_an) ', V[anode]:' num2str(1-X_Li_an)]);
 
     % Set the electrode and electrolyte potential
-    elde.setElectricPotential(phi_s);
-    elyt.setElectricPotential(phi_l);
+    setElectricPotential(elde,phi_s);
+    setElectricPotential(elyt,phi_l);
 
     % Get the net reaction rate at the anode-side interface
-    % Reaction according to cti file: Li+[elyt] + V[anode] + electron <=> Li[anode]
-    r = anode_interface.ropNet; % [kmol/m2/s]
+    % Reaction according to YAML file: Li+[elyt] + V[anode] + electron <=> Li[anode]
+    r = rop_net(anode_interface); % [kmol/m2/s]
 
     % Calculate the current. Should be negative for cell discharge.
     anCurr = r*faradayconstant*S_an; %
 end
 
 % This function returns the Cantera calculated cathode current (in A)
-function caCurr = cathode_curr(phi_s, phi_l, X_Li_ca, cathode, elde, elyt, cathode_interface, S_ca)
+function caCurr = cathode_curr(phi_s,phi_l,X_Li_ca,cathode,elde,elyt,cathode_interface,S_ca)
     % Set the active material mole fractions
-    cathode.X = ['Li[cathode]:' num2str(X_Li_ca) ', V[cathode]:' num2str(1-X_Li_ca)];
+    set(cathode,'X',['Li[cathode]:' num2str(X_Li_ca) ', V[cathode]:' num2str(1-X_Li_ca)]);
 
     % Set the electrode and electrolyte potential
-    elde.setElectricPotential(phi_s);
-    elyt.setElectricPotential(phi_l);
+    setElectricPotential(elde,phi_s);
+    setElectricPotential(elyt,phi_l);
 
     % Get the net reaction rate at the cathode-side interface
-    % Reaction according to cti file: Li+[elyt] + V[cathode] + electron <=> Li[cathode]
-    r = cathode_interface.ropNet; % [kmol/m2/s]
+    % Reaction according to YAML file: Li+[elyt] + V[cathode] + electron <=> Li[cathode]
+    r = rop_net(cathode_interface); % [kmol/m2/s]
 
     % Calculate the current. Should be negative for cell discharge.
     caCurr = r*faradayconstant*S_ca*(-1); %
