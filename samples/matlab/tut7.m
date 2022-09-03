@@ -4,37 +4,30 @@
 
 help tut7
 
-LoadCantera;
-
 % A variety of thermodynamic property methods are provided.
 gas = Air
-gas.TP = {800, oneatm}
+set(gas,'T',800,'P',oneatm)
 
 % temperature, pressure, density
-Temperature = gas.T
-Pressure = gas.P
-rho = gas.D
-n = gas.molarDensity
+T = temperature(gas)
+P = pressure(gas)
+rho = density(gas)
+n = molarDensity(gas)
 
 % species non-dimensional properties
-hrt = gas.enthalpies_RT            % vector of h_k/RT
-
-% Unlike the legacy interface, each thermodynamic property is tied to the
-% `basis`('molar' or 'mass') instead of being two separate properties. 
+hrt = enthalpies_RT(gas)            % vector of h_k/RT
 
 % mixture properties per mole
-gas.basis = 'molar';
-hmole = gas.H
-umole = gas.U
-smole = gas.S
-gmole = gas.G
+hmole = enthalpy_mole(gas)
+umole = intEnergy_mole(gas)
+smole = entropy_mole(gas)
+gmole = gibbs_mole(gas)
 
 % mixture properties per unit mass
-gas.basis = 'mass';
-hmass = gas.H
-umass = gas.U
-smass = gas.S
-gmass = gas.G
+hmass = enthalpy_mass(gas)
+umass = intEnergy_mass(gas)
+smass = entropy_mass(gas)
+gmass = gibbs_mass(gas)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

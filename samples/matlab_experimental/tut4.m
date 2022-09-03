@@ -8,13 +8,14 @@
 % Keywords: tutorial, equilibrium, kinetics
 
 help tut4
+LoadCantera;
 
 % To set a gas mixture to a state of chemical equilibrium, use the
 % 'equilibrate' method.
 %
 g = GRI30('None');
-set(g,'T',1200.0,'P',oneatm,'X','CH4:0.95,O2:2,N2:7.52')
-equilibrate(g,'TP')
+g.TPX = {1200.0, oneatm, 'CH4:0.95,O2:2,N2:7.52'};
+g.equilibrate('TP')
 
 % The above statement sets the state of object 'g' to the state of
 % chemical equilibrium holding temperature and pressure
@@ -22,8 +23,8 @@ equilibrate(g,'TP')
 % fixed:
 
 disp('fixed H and P:');
-set(g,'T',1200.0,'P',oneatm,'X','CH4:0.95,O2:2.0,N2:7.52');
-equilibrate(g,'HP')
+g.TPX = {1200.0, oneatm, 'CH4:0.95,O2:2.0,N2:7.52'};
+g.equilibrate('HP')
 
 
 % Other options are
@@ -32,29 +33,29 @@ equilibrate(g,'HP')
 %     'SP'   fixed specific entropy and pressure
 
 disp('fixed U and V:');
-set(g,'T',1200.0,'P',oneatm,'X','CH4:0.95,O2:2,N2:7.52');
-equilibrate(g,'UV')
+g.TPX = {1200.0, oneatm, 'CH4:0.95,O2:2,N2:7.52'};
+g.equilibrate('UV')
 
 disp('fixed S and V:');
-set(g,'T',1200.0,'P',oneatm,'X','CH4:0.95,O2:2,N2:7.52');
-equilibrate(g,'SV')
+g.TPX = {1200.0, oneatm, 'CH4:0.95,O2:2,N2:7.52'};
+g.equilibrate('SV')
 
 disp('fixed S and P:');
-set(g,'T',1200.0,'P',oneatm,'X','CH4:0.95,O2:2,N2:7.52');
-equilibrate(g,'SP')
+g.TPX = {1200.0, oneatm, 'CH4:0.95,O2:2,N2:7.52'};
+g.equilibrate('SP')
 
 % How can you tell if 'equilibrate' has correctly found the
 % chemical equilibrium state? One way is verify that the net rates of
 % progress of all reversible reactions are zero.
 
 % Here is the code to do this:
-set(g,'T',2000.0,'P',oneatm,'X','CH4:0.95,O2:2,N2:7.52');
-equilibrate(g,'TP')
-rf = rop_f(g);
-rr = rop_r(g);
+g.TPX = {1200.0, oneatm, 'CH4:0.95,O2:2,N2:7.52'};
+g.equilibrate('TP')
+rf = g.ropForward;
+rr = g.ropReverse;
 format short e;
-for i = 1:nReactions(g)
-   if isReversible(g,i)
+for i = 1:g.nReactions
+   if g.isReversible(i)
       disp([i, rf(i), rr(i), (rf(i) - rr(i))/rf(i)]);
    end
 end

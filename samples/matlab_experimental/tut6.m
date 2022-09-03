@@ -11,6 +11,10 @@
 %
 % Keywords: tutorial, transport
 
+help tut6
+
+LoadCantera;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Methods are provided to compute transport properties. By
@@ -36,33 +40,33 @@ g1 = GRI30('Multi')
 g2 = GRI30('Mix')
 
 % Both models use a mixture-averaged formulation for the viscosity.
-visc = [viscosity(g1), viscosity(g2)]
+visc = [g1.viscosity, g2.viscosity]
 
 % The thermal conductivity differs, however.
-lambda = [thermalConductivity(g1), thermalConductivity(g2)]
+lambda = [g1.thermalConductivity, g1.thermalConductivity]
 
 % Binary diffusion coefficients
-bdiff1 = binDiffCoeffs(g1)
-bdiff2 = binDiffCoeffs(g2)
+bdiff1 = g1.binDiffCoeffs
+bdiff2 = g2.binDiffCoeffs
 
 % Mixture-averaged diffusion coefficients. For convenience, the
 % multicomponent model implements mixture-averaged diffusion
 % coefficients too.
-dmix2 = mixDiffCoeffs(g1)
-dmix1 = mixDiffCoeffs(g2)
+dmix2 = g1.mixDiffCoeffs
+dmix1 = g2.mixDiffCoeffs
 
 % Multicomponent diffusion coefficients. These are only implemented
 % if the multicomponent model is used.
-dmulti = multiDiffCoeffs(g1)
+dmulti = g1.multiDiffCoeffs
 
 % Thermal diffusion coefficients. These are only implemented with the
 % multicomponent model.  These will be very close to zero, since
 % the composition is pure H2.
-dt = thermalDiffCoeffs(g1)
+dt = g1.thermalDiffCoeffs
 
 % Now change the composition and re-evaluate
-set(g1,'X',ones(nSpecies(g1),1));
-dt = thermalDiffCoeffs(g1)
+g1.X = ones(g1.nSpecies,1);
+dt = g1.thermalDiffCoeffs
 
 % Note that there are no singularities for pure gases. This is
 % because a very small positive value is added to all mole

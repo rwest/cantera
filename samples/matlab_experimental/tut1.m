@@ -9,6 +9,8 @@
 
 help tut1
 
+LoadCantera;
+
 % Start MATLAB, and at the prompt type:
 
 gas1 = GRI30
@@ -61,7 +63,7 @@ gas1 = GRI30
 
 % The state of the object can be easily changed. For example,
 
-setTemperature(gas1, 1200)
+gas1.T = 1200
 
 % sets the temperature to 1200 K. (Cantera always uses SI units.)
 
@@ -91,26 +93,18 @@ setTemperature(gas1, 1200)
 %
 
 
-% Setting multiple properties: the 'set' method
-% ---------------------------------------------
+% Setting multiple properties
+% ---------------------------
 
-% If you want to set multiple properties at once, use the 'set'
-% method. (Note: a 'method' is just the term for a function that acts
-% on an object. In MATLAB, methods take the object as the first
-% argument.)
+% It is much simpler to set multiple properties at once in the new Cantera
+% Matlab interface. The 'set' method is no longer necessary. Instead,
+% simply set the desired property combinations with a cell array. 
 
-set(gas1, 'Temperature', 900.0, 'Pressure', 1.e5);
+gas1.TP = {900.0, 1.e5};
 
 % This statement sets both temperature and pressure at the same
-% time. Any number of property/value pairs can be specified in a
-% call to 'set'. For example, the following sets the mole fractions
-% too:
-set(gas1, 'Temperature', 900.0, 'Pressure', 1.e5, 'MoleFractions', ...
-          'CH4:1,O2:2,N2:7.52');
-
-% The 'set' method also accepts abbreviated property names:
-
-set(gas1,'T',900.0,'P',1.e5,'X','CH4:1,O2:2,N2:7.52')
+% time. The following sets the mole fractions too:
+gas1.TPX = {900.0, 1.e5, 'CH4:1,O2:2,N2:7.52'};
 
 % Either version results in
 %
@@ -135,14 +129,14 @@ set(gas1,'T',900.0,'P',1.e5,'X','CH4:1,O2:2,N2:7.52')
 %                  N2       0.714829         0.724665          -24.935
 %       [  +50 minor]              0                0
 
-% Other properties may also be set using 'set', including some that
+% Other properties may also be set, including some that
 % can't be set individually. The following property pairs may be
 % set: (Enthalpy, Pressure), (IntEnergy, Volume), (Entropy,
 % Volume), (Entropy, Pressure). In each case, the values of the
 % extensive properties must be entered *per unit mass*.
 
 % Setting the enthalpy and pressure:
-set(gas1, 'Enthalpy', 2*enthalpy_mass(gas1), 'Pressure', 2*oneatm);
+gas1.HP = {2*gas1.H, 2*oneatm};
 
 % The composition above was specified using a string. The format is a
 % comma-separated list of <species name>:<relative mole numbers>
@@ -157,10 +151,10 @@ set(gas1, 'Enthalpy', 2*enthalpy_mass(gas1), 'Pressure', 2*oneatm);
 % fractions to the same value, do this:
 
 x = ones(53,1);   % a column vector of 53 ones
-set(gas1, 'X', x)
+gas1.X = x;
 
 % To set the mass fractions to equal values:
-set(gas1, 'Y', x)
+gas1.Y = x;
 
 
 % This clears all Matlab objects created
