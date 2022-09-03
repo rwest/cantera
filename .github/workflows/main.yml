@@ -9,7 +9,7 @@ on:
     branches:
       - main
       - testing
-      - matlab_toolbox_rebase # temporary
+      - matlab_toolbox_backup # temporary
   pull_request:
     # Build when a pull request targets main
     branches:
@@ -23,49 +23,45 @@ jobs:
 
   run-matlab-examples:
     name: Run the MATLAB examples
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
+    env:
+      PYTHON_VERSION: 3.8
     defaults:
       run:
         shell: bash -l {0}
-    strategy:
-      matrix:
-        matlab-version: [ 'R2020a', 'R2021a' ]
-      fail-fast: false
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: '3.10'
-          architecture: x64
-      - name: Install Apt dependencies
+          auto-update-conda: true
+          python-version: ${{ env.PYTHON_VERSION }}
+          miniforge-version: latest
+          activate-environment: matlab_test
+      - name: Install Conda dependencies
         run: |
-          sudo apt update
-          sudo apt install libboost-dev gfortran graphviz liblapack-dev libblas-dev gcc-5 g++-5
-      - name: Upgrade pip
-        run: python3 -m pip install -U pip setuptools wheel
-      - name: Install Python dependencies
-        run: python3 -m pip install ruamel.yaml scons numpy cython h5py pandas matplotlib scipy
+          conda install -q scons numpy ruamel.yaml cython boost-cpp fmt eigen yaml-cpp h5py pandas libgomp openblas pytest
       - name: Set up MATLAB
         uses: matlab-actions/setup-matlab@v1
         with:
-          release: ${{ matrix.matlab-version }}
-      - name: Build Cantera # compile with GCC 5.5.0 on ubuntu-18.04
-        run: python3 `which scons` build env_vars=all -j2 debug=n matlab_path='/usr/local/MATLAB/${{ matrix.matlab-version }}/' --debug=time
-      - name: Install
+          release: 'R2021a'
+      - name: Build Cantera
+        run: scons build env_vars=all -j2 debug=n matlab_path='/usr/local/MATLAB/R2021a/' --debug=time
+      - name: Install Cantera
         # spot-check installation locations
         run: |
-          sudo scons install
+          scons install
           test -f ${CONDA_PREFIX}/lib/libcantera_shared.so
           test -f ${CONDA_PREFIX}/matlab/MatlabToolbox/ctpath.m
+          test -f ${CONDA_PREFIX}/share/cantera/samples/matlab_new/tut1.m
       - name: Run MATLAB script
         uses: matlab-actions/run-command@v1
         with:
-          command: addpath('${CONDA_PREFIX}/matlab/MatlabToolbox/'), ctpath, SetMatlabToolboxVersion(1), LoadCantera
+          command: pwd, pwd, cd('/usr/share/miniconda3/envs/matlab_test/share/cantera/matlab/'), pwd, addpath(genpath('MatlabToolbox')), cantera_root, LoadCantera, Air, Air.TPX
 
 
   ubuntu-multiple-pythons:
