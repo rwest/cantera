@@ -1,20 +1,22 @@
-This new Matlab Toolbox for Cantera changs the Matlab interface to the modern Matlab structure and syntaxes for OOP. It replaced the MEX interface with direct function calling from Canter Clib.
+This experimental Matlab Toolbox for Cantera changes the Matlab interface to the modern Matlab structure and syntaxes for OOP. It replaces the MEX interface with direct function calling from Canter Clib.
 
 Installation guide:
 
 1) Install Matlab (any release newer than R2008a). 
-2) Compile Cantera from Source and install in your Python environment, as directed in this link. 
-https://cantera.org/install/compiling-install.html. Be sure to set `matlab_path` option in Scons.
-3) Both the new and legacy versions of the Matlab toolbox will be installed. However, only one can be used at a time. Activating both will result in a conflict in Matlab. 
-4) For first time users, launch Matlab, then navigate to [/path/to/cantera/installation/matlab] using "Browse for Folder".
-5) In the Command Window, run `ctpath('install')` to add search path to the Cantera Matlab Toolbox. 
-6) The user can then set the desired toolbox version by running the 'SetMatlabToolboxVersion' command. Input can be 'legacy' or 'new'.
-7) The user must restart Matlab after switching between the new and legacy interfaces. 
-8) To use the new Cantera interface, first set toolbox version to 'new' and run `LoadCantera` command. 
-9) To stop using the new Cantera interface, run the following commands:
+2) Compile Cantera from Source and install in your Conda environment, as directed in this link. 
+https://cantera.org/install/compiling-install.html. 
+2.5) The experimental Matlab Toolbox does not require a SCons option to install at this moment since it's stand-alone. It also does not require the current Matlab Toolbox to be installed. 
+3) For first time users, launch Matlab, then navigate to [/path/to/cantera/source/code] using "Browse for Folder".
+4) In the Command Window, run `addpath(genpath([pwd, 'interfaces/matlab_experimental']))` to add search path for the experimental toolbox.
+5) In the Command Window, run `addpath(genpath([pwd, 'samples/matlab_experimental']))` to add search path for the sample files.
+6) In the Command Window, run `cd([pwd, 'interfaces/matlab_experimental/Utility'])  to navigate to the Utility folder. 
+7) Open the file named 'cantera_root.m', in the second line, edit `output=` to `output=[/path/to/conda/environment]`, then save the file. 
+8) Make sure search paths to the current Matlab Toolbox and samples files are removed if it's installed. Having both the current and experimental version of the toolbox in the search path will lead to conflicts. 
+9) Run `savepath` to save all search paths.
+10) To start using the experimental toolbox, run `LoadCantera` command. 
+11) To stop using the new Cantera interface, run the following commands:
 `clear all`
 `close all`
 `cleanup`
 `UnloadCantera`
-10) To use the legacy Cantera interfaces, simply set toolbox version to 'legacy'.
-11) TO remove the search path to the Cantera Matlab Toolbox, run `ctpath('uninstall')` command in Matlab. This does NOT uninstall the Toolbox, but is a necessary step before uninstalling Cantera using SCons as SCons does not clean up the search paths for Matlab. 
+11) To switch back to the current matlab toolbox, undo steps 3, 4, 5, 8, and 9. The command to remove search path in Matlab is `rmpath`. 
