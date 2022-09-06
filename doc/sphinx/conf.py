@@ -50,8 +50,6 @@ autodoc_default_options = {
     'undoc-members': True,
 }
 
-matlab_src_dir = os.path.abspath('../../interfaces/matlab')
-
 def setup(app):
     """Set up an event handler to escape splat characters (*) in docstrings
     when they appear in the introspected function signature.
@@ -323,3 +321,8 @@ man_pages = [
     ('index', 'cantera', 'Cantera Documentation',
      ['Cantera Developers'], 1)
 ]
+
+# -- Option for Matlab Experimental Toolbox Location -------------------
+
+matlab_src_dir = os.path.abspath('../../interfaces/matlab_experimental')
+

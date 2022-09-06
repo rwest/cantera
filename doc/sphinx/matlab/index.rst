@@ -1,7 +1,7 @@
 
-**************************************
-Matlab Interface (Legacy) User's Guide
-**************************************
+*****************************
+Matlab Interface User's Guide
+*****************************
 
 .. toctree::
    :maxdepth: 2

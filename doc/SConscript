@@ -171,7 +171,7 @@ if localenv['sphinx_docs']:
         doc = ''
 
         # The base directory of the MATLAB toolbox relative to the sphinx build directory
-        base = '../interfaces/matlab_legacy'
+        base = '../interfaces/matlab/toolbox'
         for obj in page.objects:
             all_files = []
             # Set the subheader based on the class name
@@ -202,8 +202,8 @@ if localenv['sphinx_docs']:
         # every time the source is changed, we don't want to have to commit the
         # change in the rst file as well as the source - too much code churn. So
         # we use a template and a SubstFile directive.
-        c = tempenv.SubstFile('#doc/sphinx/matlab_legacy/%s.rst' % page.name,
-                              '#doc/sphinx/matlab_legacy/matlab-template.rst.in')
+        c = tempenv.SubstFile('#doc/sphinx/matlab/%s.rst' % page.name,
+                              '#doc/sphinx/matlab/matlab-template.rst.in')
         build(c)
         localenv.Depends(sphinxdocs, c)
 

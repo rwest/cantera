@@ -1,6 +1,6 @@
 function  runCanteraTests(varargin)
 % Set Cantera paths
-run ../../interfaces/matlab/Utility/testpath.m
+run ../../interfaces/matlab_legacy/testpath.m
 
 % Set test framework path
 path('../../ext/matlab_xunit', path)
@@ -12,9 +12,8 @@ else
     runtests('-verbose','-logfile',varargin{1})
 end
 
-% unload the Cantera Clib
-cleanup
-UnloadCantera
+% unload the MEX file
+clear ctmethods
 
 % delete global objects created by some of the test
 clear global static*

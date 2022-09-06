@@ -13,5 +13,5 @@ format.
 
    yaml/index
    cython/index
-   matlab_new/index
-   matlab_legacy/index
+   matlab/index
+   matlab_experimental/index

@@ -6,7 +6,7 @@ classdef TestImport < TestCase
 
         function testImportYaml(self)
             gas = Solution('h2o2.yaml');
-            assertEqual(gas.T, 300)
+            assertEqual(temperature(gas), 300)
         end
     end
 end
