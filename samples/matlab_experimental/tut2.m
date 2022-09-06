@@ -12,6 +12,9 @@
 help tut2
 
 LoadCantera;
+clear all
+close all
+cleanup
 
 t0 = cputime;
 
@@ -20,7 +23,7 @@ t0 = cputime;
 % GRI-Mech 3.0. Another way to do this is shown here, with statements
 % added to measure how long this takes:
 
-gas1 = Solution('gri30.yaml', 'gas', 'Mix');
+gas1 = Solution('gri30.yaml', 'gri30', 'Mix');
 msg = sprintf('time to create gas1: %f', cputime - t0)
 
 % Function 'Solution' constructs an object representing a phase of
@@ -38,7 +41,7 @@ msg = sprintf('time to create gas1: %f', cputime - t0)
 % it has already processed and doesn't need to read them in again:
 
 t0 = cputime;
-gas1b = Solution('gri30.yaml', 'gas', 'None');
+gas1b = Solution('gri30.yaml', 'gri30', 'None');
 msg = sprintf('time to create gas1b: %f', cputime - t0)
 
 % Since GRI-Mech is a rather small mechanism, there might not be much
@@ -56,12 +59,6 @@ msg = sprintf('time to create gas1b: %f', cputime - t0)
 % specified. On a Unix/Linux/macOS machine, they are usually kept
 % in the 'data' subdirectory within the Cantera installation
 % directory.
-
-% If for some reason Cantera has difficulty finding where these files
-% are on your system, set environment variable CANTERA_DATA to the
-% directory where they are located. Alternatively, you can call function
-% adddir to add a directory to the Cantera search path:
-adddir('/usr/local/cantera/my_data_files');
 
 % Cantera input files are plain text files, and can be created with
 % any text editor. See the document 'Defining Phases and Interfaces'

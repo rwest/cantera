@@ -12,6 +12,9 @@
 
 help tut5
 LoadCantera;
+clear all
+close all
+cleanup
 
 g = GRI30('None');
 g.TPX = {1500, oneatm, ones(nSpecies(g),1)};
@@ -69,14 +72,14 @@ legend('creation','destruction','net');
 % directly from the rates of progress and stoichiometric
 % coefficients.
 
-cdot2 = nu_p*qf + nu_r*qr;
-creation = [cdot, cdot2, cdot - cdot2]
+cdot2 = nu_p*qf' + nu_r*qr';
+creation = [cdot; cdot2'; cdot - cdot2']
 
-ddot2 = nu_r*qf + nu_p*qr;
-destruction = [ddot, ddot2, ddot - ddot2]
+ddot2 = nu_r*qf' + nu_p*qr';
+destruction = [ddot; ddot2'; ddot - ddot2']
 
-wdot2 = nu_net * qn;
-net = [wdot, wdot2, wdot - wdot2]
+wdot2 = nu_net * qn';
+net = [wdot; wdot2'; wdot - wdot2']
 
 % 4) Reaction equations
 

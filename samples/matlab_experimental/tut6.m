@@ -14,6 +14,9 @@
 help tut6
 
 LoadCantera;
+clear all
+close all
+cleanup
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

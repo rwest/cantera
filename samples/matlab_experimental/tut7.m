@@ -5,6 +5,9 @@
 help tut7
 
 LoadCantera;
+clear all
+close all
+cleanup
 
 % A variety of thermodynamic property methods are provided.
 gas = Air

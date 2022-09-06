@@ -9,6 +9,9 @@
 
 help tut4
 LoadCantera;
+clear all
+close all
+cleanup
 
 % To set a gas mixture to a state of chemical equilibrium, use the
 % 'equilibrate' method.
@@ -55,7 +58,7 @@ rf = g.ropForward;
 rr = g.ropReverse;
 format short e;
 for i = 1:g.nReactions
-   if g.isReversible(i)
+   if g.isReversible(i-1)
       disp([i, rf(i), rr(i), (rf(i) - rr(i))/rf(i)]);
    end
 end

@@ -10,6 +10,9 @@
 help tut1
 
 LoadCantera;
+clear all
+close all
+cleanup
 
 % Start MATLAB, and at the prompt type:
 
@@ -136,6 +139,7 @@ gas1.TPX = {900.0, 1.e5, 'CH4:1,O2:2,N2:7.52'};
 % extensive properties must be entered *per unit mass*.
 
 % Setting the enthalpy and pressure:
+gas1.basis = 'mass';
 gas1.HP = {2*gas1.H, 2*oneatm};
 
 % The composition above was specified using a string. The format is a
