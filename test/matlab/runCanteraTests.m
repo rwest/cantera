@@ -1,6 +1,6 @@
 function  runCanteraTests(varargin)
 % Set Cantera paths
-run ../../interfaces/matlab_legacy/testpath.m
+run ../../interfaces/matlab/testpath.m
 
 % Set test framework path
 path('../../ext/matlab_xunit', path)

@@ -19,7 +19,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   ubuntu-multiple-pythons:
     name: ${{ matrix.os }} with Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
@@ -643,4 +642,3 @@ jobs:
       shell: cmd
     - name: Test Cantera
       run: scons test show_long_tests=yes verbose_tests=yes --debug=time
-

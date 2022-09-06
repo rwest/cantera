@@ -320,8 +320,8 @@ if localenv['python_package'] == 'full':
 
 if localenv['matlab_toolbox'] == 'y':
     matlabTest = addMatlabTest('runCanteraTests.m', 'matlab',
-                                dependencies=multi_glob(localenv, 'matlab', 'm'))                                  
-    localenv.Alias('test-matlab', matlabTest)
+                                dependencies=multi_glob(localenv, 'matlab', 'm'))
+                                localenv.Alias('test-matlab', matlabTest)
     env['testNames'].append('matlab')
 
 # Force explicitly-named tests to run even if SCons thinks they're up to date
