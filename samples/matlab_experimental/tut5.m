@@ -16,7 +16,7 @@ clear all
 close all
 cleanup
 
-g = GRI30('None');
+g = Solution('gri30.yaml', 'gri30', 'None');
 g.TPX = {1500, oneatm, ones(nSpecies(g),1)};
 
 % Methods are provided that compute many quantities of interest for

@@ -16,7 +16,7 @@ cleanup
 
 % Start MATLAB, and at the prompt type:
 
-gas1 = GRI30
+gas1 = Solution('gri30.yaml', 'gri30')
 
 % If you have successfully installed the Cantera toolbox, you should
 %see something like this:
@@ -137,7 +137,10 @@ gas1.TPX = {900.0, 1.e5, 'CH4:1,O2:2,N2:7.52'};
 % set: (Enthalpy, Pressure), (IntEnergy, Volume), (Entropy,
 % Volume), (Entropy, Pressure). In each case, the values of the
 % extensive properties must be entered *per unit mass*.
-
+%
+% By default, thermal properties are measured on a per unit mole 
+% basis. Therefore, it is necessary to set the basis to 'mass' first.
+%
 % Setting the enthalpy and pressure:
 gas1.basis = 'mass';
 gas1.HP = {2*gas1.H, 2*oneatm};

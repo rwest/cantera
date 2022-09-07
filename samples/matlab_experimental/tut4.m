@@ -16,7 +16,7 @@ cleanup
 % To set a gas mixture to a state of chemical equilibrium, use the
 % 'equilibrate' method.
 %
-g = GRI30('None');
+g = Solution('gri30.yaml', 'gri30', 'None');
 g.TPX = {1200.0, oneatm, 'CH4:0.95,O2:2,N2:7.52'};
 g.equilibrate('TP')
 

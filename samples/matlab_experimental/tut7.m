@@ -10,7 +10,7 @@ close all
 cleanup
 
 % A variety of thermodynamic property methods are provided.
-gas = Air
+gas = Solution('air.yaml', 'air');
 gas.TP = {800, oneatm}
 
 % temperature, pressure, density

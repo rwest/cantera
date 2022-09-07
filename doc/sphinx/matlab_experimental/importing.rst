@@ -31,8 +31,4 @@ Pure Fluid Phases
 .. mat:autofunction:: Nitrogen
 .. mat:autofunction:: Oxygen
 .. mat:autofunction:: Water
-
-Mixture Phases
---------------
-.. mat:autofunction:: Air
-.. mat:autofunction:: GRI30
+      

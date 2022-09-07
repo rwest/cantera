@@ -12,7 +12,7 @@ cleanup
 % Suppose you have created a Cantera object and want to know what
 % methods are available for it, and get help on using the methods.
 
-g = GRI30
+g = Solution('gri30.yaml', 'gri30');
 
 % The first thing you need to know is the MATLAB class object g
 % belongs to. Type:
