@@ -1,7 +1,10 @@
 function [work, efficiency] = rankine(t1, p2, eta_pump, eta_turbine)
     % This example computes the efficiency of a simple vapor power cycle.
-    help rankine
+    %
+    % Keywords: thermodynamics, thermodynamic cycle, non-ideal fluid
 
+    help rankine
+    
     % create an object representing water
     w = Water;
 
