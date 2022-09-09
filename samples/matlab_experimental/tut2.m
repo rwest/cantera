@@ -1,7 +1,7 @@
 % Tutorial 2: Working with input files
 %
 %   Topics:
-%     - using functions 'Solution' and 'importInterface'
+%     - using functions 'Solution' and 'Interface'
 %     - input files distributed with Cantera
 %     - the Cantera search path
 %     - CTML files
@@ -77,11 +77,10 @@ gas2 = Solution('diamond.yaml', 'gas');        % a gas
 
 diamond = Solution('diamond.yaml','diamond');  % bulk diamond
 
-diamonnd_surf = importInterface('diamond.yaml','diamond_100',...
-                                gas2, diamond);
+diamonnd_surf = Interface('diamond.yaml','diamond_100', gas2, diamond);
 
 % Note that the bulk (that is, 3D) phases that participate in the surface
-% reactions must also be passed as arguments to importInterface.
+% reactions must also be passed as arguments to Interface.
 
 % Converting CK-format files
 % --------------------------
