@@ -1,20 +1,32 @@
 classdef Domain1D < handle
+    % Domain1D Class
+    %
+    % d = Domain1D(a, b)
+    %
+    % :param a:
+    %    String type of domain. Possible values are:
+    %    `StagnationFlow`
+    %    `AxisymmetricFlow`
+    %    `Inlet1D`
+    %    `Surf1D`
+    %    `Symm1D`
+    %    `Outlet1D`
+    %    `ReactingSurface`
+    %    `OutletRes`
+    %
+    % :param b:
+    %     Instance of class :mat:func:`Solution` (for ``a == 1``)
+    %     or :mat:func:`Interface` (for ``a == 6``). Not used for
+    %     all other valid values of ``a``.
+    %
     
-    properties (SetAccess = immutable)
-        domainID 
-        % ID of the domain
-        %
-        type 
-        % Type of the domain
-        %
-        T 
-        % Boundary Temperature. Units: K.
-        %
-        P 
-        % Boundary Pressure. Units: Pa.
-        %
+    properties
+        domainID % ID of the domain
+        type % Type of the domain
+        T % Boundary Temperature. Units: K.
+        P % Boundary Pressure. Units: Pa.
         bounds
-        % (lower, upper) bounds for a solution component.
+        % Get the (lower, upper) bounds for a solution component.
         %
         % b = d.bounds(componoent)
         %
@@ -177,26 +189,6 @@ classdef Domain1D < handle
         %% Domain1D Class Constructor.
 
         function d = Domain1D(a, b)
-            % Domain1D class constructor.
-            %
-            % d = Domain1D(a, b)
-            %
-            % :param a:
-            %    String type of domain. Possible values are:
-            %    `StagnationFlow`
-            %    `AxisymmetricFlow`
-            %    `Inlet1D`
-            %    `Surf1D`
-            %    `Symm1D`
-            %    `Outlet1D`
-            %    `ReactingSurface`
-            %    `OutletRes`
-            %
-            % :param b:
-            %     Instance of class :mat:func:`Solution` (for ``a == 1``)
-            %     or :mat:func:`Interface` (for ``a == 6``). Not used for
-            %     all other valid values of ``a``.
-            %
             checklib;
             
             if nargin == 1
@@ -248,13 +240,7 @@ classdef Domain1D < handle
 
         function delete(d)
             % Delete the C++ Domain1D object.
-            %
-            % d.delete
-            %
-            % :param d:
-            %     Instance of class :mat:func:`Domain1D` (or another
-            %     object that derives from Domain1D)
-            %
+
             callct('domain_del', d.domainID);
         end
 
