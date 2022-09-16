@@ -21,10 +21,6 @@ Axisymmetric Flow
 ^^^^^^^^^^^^^^^^^
 .. mat:autofunction:: AxisymmetricFlow
 
-Axisymmetric Stagnation Flow
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. mat:autofunction:: AxiStagnFlow
-
 Inlet
 ^^^^^
 .. mat:autofunction:: Inlet

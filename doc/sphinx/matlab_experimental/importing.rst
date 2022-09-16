@@ -18,9 +18,6 @@ Interface
 ---------
 .. mat:autoclass:: Interface
 
-.. mat:autofunction:: importEdge
-.. mat:autofunction:: importInterface
-
 Pure Fluid Phases
 -----------------
 .. mat:autofunction:: CarbonDioxide

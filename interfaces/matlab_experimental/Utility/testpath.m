@@ -1,4 +1,3 @@
-% testpath.m
 % Set up environment for testing the Cantera Matlab interface
 % from within the Cantera source tree. Run this file from the
 % root of the Cantera source tree, for example:

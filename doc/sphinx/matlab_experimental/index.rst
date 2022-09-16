@@ -8,8 +8,8 @@ Matlab Toolbox (New) Documentation
 
    importing
    thermo
-   kinetics
    transport
+   kinetics
    zerodim
    onedim
    constants
