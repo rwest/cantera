@@ -10,9 +10,9 @@ Domain1D
 --------
 .. mat:autoclass:: Domain1D
    
-Stack
+Sim1D
 -----
-.. mat:autoclass:: Stack
+.. mat:autoclass:: Sim1D
 
 Flow Domains
 ------------
