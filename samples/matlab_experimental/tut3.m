@@ -7,7 +7,6 @@ help tut3
 LoadCantera;
 clear all
 close all
-cleanup
 
 % Suppose you have created a Cantera object and want to know what
 % methods are available for it, and get help on using the methods.
@@ -53,7 +52,7 @@ help Solution
 % few tutorials.
 
 clear all
-cleanup
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   end of tutorial 3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

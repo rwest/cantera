@@ -14,10 +14,9 @@ help tut5
 LoadCantera;
 clear all
 close all
-cleanup
 
 g = Solution('gri30.yaml', 'gri30', 'None');
-g.TPX = {1500, oneatm, ones(nSpecies(g),1)};
+g.TPX = {1500, oneatm, ones(g.nSpecies, 1)};
 
 % Methods are provided that compute many quantities of interest for
 % kinetics. Some of these are:
@@ -84,15 +83,15 @@ net = [wdot; wdot2'; wdot - wdot2']
 % 4) Reaction equations
 
 e8    = g.reactionEqn(8)             % equation for reaction 8
-e1_10 = g.reactionEqn(1:10)          % equation for rxns 1 - 10
-eqs   = g.reactionEqn                % all equations
+e1_10 = g.reactionEqns(1:10)          % equation for rxns 1 - 10
+eqs   = g.reactionEqns                % all equations
 
 % 5) Equilibrium constants
 
 % The equilibrium constants are computed in concentration units,
 % with concentrations in kmol/m^3.
 
-kc = g.Kc;
+kc = g.equilibriumConstants;
 for i = 1:g.nReactions
    fprintf('%50s  %13.5g', eqs{i}, kc(i))
 end
@@ -109,5 +108,4 @@ for i = 1:g.nReactions
 end
 
 clear all
-cleanup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

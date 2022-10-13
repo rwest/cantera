@@ -16,7 +16,6 @@ help tut6
 LoadCantera;
 clear all
 close all
-cleanup
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -77,4 +76,3 @@ dt = g1.thermalDiffCoeffs
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
-cleanup

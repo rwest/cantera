@@ -7,7 +7,6 @@ help tut7
 LoadCantera;
 clear all
 close all
-cleanup
 
 % A variety of thermodynamic property methods are provided.
 gas = Solution('air.yaml', 'air');
@@ -42,4 +41,3 @@ gmass = gas.G
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear all
-cleanup

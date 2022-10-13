@@ -14,7 +14,6 @@ help tut2
 LoadCantera;
 clear all
 close all
-cleanup
 
 t0 = cputime;
 
@@ -100,4 +99,3 @@ diamonnd_surf = Interface('diamond.yaml','diamond_100', gas2, diamond);
 % ck2yaml --input=mech.inp --thermo=therm.dat --transport=tran.dat --name=mymech
 
 clear all
-cleanup

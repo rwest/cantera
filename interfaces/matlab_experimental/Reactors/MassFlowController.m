@@ -1,6 +1,8 @@
 function m = MassFlowController(upstream, downstream)
     % Create a mass flow controller.
+    %
     % m = MassFlowController(upstream, downstream)
+    %
     % Creates an instance of class :mat:func:`FlowDevice` configured to
     % simulate a mass flow controller that maintains a constant mass flow
     % rate independent of upstream or downstream conditions. If two reactor

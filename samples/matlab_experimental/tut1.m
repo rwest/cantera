@@ -12,7 +12,6 @@ help tut1
 LoadCantera;
 clear all
 close all
-cleanup
 
 % Start MATLAB, and at the prompt type:
 
@@ -163,12 +162,8 @@ gas1.X = x;
 % To set the mass fractions to equal values:
 gas1.Y = x;
 
-
 % This clears all Matlab objects created
 clear all
-
-% and this clears all Cantera objects created
-cleanup
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   end of tutorial 1

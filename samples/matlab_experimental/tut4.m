@@ -11,7 +11,6 @@ help tut4
 LoadCantera;
 clear all
 close all
-cleanup
 
 % To set a gas mixture to a state of chemical equilibrium, use the
 % 'equilibrate' method.
@@ -85,7 +84,6 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
-cleanup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   end of tutorial 4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
