@@ -6,4 +6,5 @@ For first time users, launch matlab, navigate to the toolbox folder, then run th
 
 To start using the toolbox, use the LoadCantera command to load cantera_shared.dll into the memory.  
 
-To stop using Cantera and purge all objects from memory, first run cleanup command, then run UnloadCantera command. 
+To stop using Cantera and purge all objects from memory, first run cleanup command, then run UnloadCantera command.
+
