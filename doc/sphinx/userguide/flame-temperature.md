@@ -33,7 +33,7 @@ To find the flame temperature resulting from these reactions using Cantera, we c
 `Solution` object containing only the species in the above stoichiometric equations, and
 then use the `Solution.equilibrate` function to find the resulting mixture composition
 and temperature, taking advantage of the fact that equilibrium will strongly favor
-conversion of the fuel molecule.
+conversion of the fuel molecule. Hey, I fiked it!
 
 ```{code-cell} python
 import cantera as ct
